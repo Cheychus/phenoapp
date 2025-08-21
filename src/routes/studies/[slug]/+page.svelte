@@ -13,73 +13,41 @@
 
   //  const obj = $derived(getObjectByID("#Process_S_winter_2020_Growth_437"));
 
-  let studyData = $derived(
-    $arcData["@graph"].filter((element) => {
-      return (
-        element["@type"] === "Dataset" && element["additionalType"] === "Study"
-      );
+  let study = $derived(
+    $arcData["@graph"].find((e) => {
+      return e.identifier === data.slug;
     }),
   );
-
- let study = studyData.find((study) => study.identifier === data.slug);
-  // let processes = $derived(
-  //     $arcData['@graph'].filter((element) => {
-  //       console.log(study?.about,element['@id'], study?.about.includes(element['@id']) )
-  //       return study?.about.includes(element['@id']);
-  //     })
-
-
-  
-      // for(let i = 0; i < 10; i++){
-      //   const processId = study.about[i]['@id'];
-      //   const process = getObjectByID($arcData['@graph'], processId);
-      //   processes = [...processes, process];
-
-      //   // console.log(processId);
-      //    // console.log(process);
-      // }
-  // );
-
-    
-
-  // $effect(() => {
-  //   // const obj = getObjectByID($arcData['@graph'], '#Process_S_winter_2020_Growth_437');
-  //   // console.log(obj);
-  //   console.log(studyData);
-  //   const study = studyData.find((study) => study.identifier === data.slug);
-  //   console.log(study);
-
-  //   if(study === undefined){
-  //     console.log('Study does not exist!');
-  //   }else{
-  //     for(let i = 0; i < 10; i++){
-  //       const processId = study.about[i]['@id'];
-  //       const process = getObjectByID($arcData['@graph'], processId);
-  //       processes = [...processes, process];
-
-  //       // console.log(processId);
-  //        // console.log(process);
-  //     }
-  //   }
-  //   console.log(processes);
-  // });
-
-  // collect all processes (about)
-
-  // const processes = $arcData['@graph']
+  let processes = $derived(
+    study?.about
+      ? study.about.map((e) => getObjectByID($arcData["@graph"], e["@id"]))
+      : [],
+  );
 </script>
 
-<ul class="border">
-  {study?.about.length}
-  {#each study?.about as process}
-    {#await getObjectByID($arcData['@graph'], process['@id'])}
-      <li>Loading</li>
-    {:then p} 
-      <li>{p}</li>
-    {/await}
-  {/each}
-</ul>
-
+<table class="table">
+  <thead>
+    <tr>
+      <th>Source</th>
+      <th>Protocol</th>
+      <th>Sample</th>
+    </tr>
+  </thead>
+  <tbody>
+    {#each processes as process}
+      <tr>
+        <td>{getObjectByID($arcData["@graph"], process.object["@id"]).name}</td>
+        <td
+          >{getObjectByID(
+            $arcData["@graph"],
+            process.executesLabProtocol["@id"],
+          ).name}</td
+        >
+        <td>{getObjectByID($arcData["@graph"], process.result["@id"]).name}</td>
+      </tr>
+    {/each}
+  </tbody>
+</table>
 
 <!-- Open the modal using ID.showModal() method -->
 <button class="btn" onclick={openModal}>open modal</button>

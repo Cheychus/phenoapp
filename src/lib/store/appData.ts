@@ -1,6 +1,10 @@
-import {get,writable } from "svelte/store";
+import {writable, type Writable, type get} from "svelte/store";
 
-export let arcData = writable({
+type Arc = {
+    '@graph': Array<any>
+}
+
+export let arcData : Writable<Arc>= writable({
     '@graph' : []
 })
 export let studyData = writable([]);

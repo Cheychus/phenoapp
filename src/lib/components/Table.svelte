@@ -5,7 +5,7 @@
 
 // Extract unique Keys from table Data
 
-let headers = [];
+let headers : Array<any> = [];
 // reactive statement needed because data will change after the fetch call is complete
 $: if (tableData.length > 0) {
     const tableHeader = new Set();
