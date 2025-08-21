@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { PageProps } from "./$types";
-  import { getObjectByID, arcData } from "$lib/store/appData";
+  import { arcData } from "$lib/store/appData";
 
   let { data }: PageProps = $props();
 
@@ -20,10 +20,15 @@
   );
   let processes = $derived(
     study?.about
-      ? study.about.map((e) => getObjectByID($arcData["@graph"], e["@id"]))
+      ? study.about.map((e) => $arcData.getObjectByID(e["@id"]))
       : [],
   );
 </script>
+
+
+{#if !study}
+  <p>Keine Studie mit dem Namen: <strong>{data.slug}</strong> gefunden</p>
+{/if}
 
 <table class="table">
   <thead>
@@ -36,14 +41,11 @@
   <tbody>
     {#each processes as process}
       <tr>
-        <td>{getObjectByID($arcData["@graph"], process.object["@id"]).name}</td>
+        <td>{$arcData.getObjectByID(process?.object["@id"]).name }</td>
         <td
-          >{getObjectByID(
-            $arcData["@graph"],
-            process.executesLabProtocol["@id"],
-          ).name}</td
+          >{$arcData.getObjectByID(process.executesLabProtocol["@id"]).name}</td
         >
-        <td>{getObjectByID($arcData["@graph"], process.result["@id"]).name}</td>
+        <td>{$arcData.getObjectByID(process?.result["@id"]).name}</td>
       </tr>
     {/each}
   </tbody>
