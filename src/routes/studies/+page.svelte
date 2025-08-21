@@ -1,7 +1,5 @@
 <script lang='ts'>
     import Table from "$lib/components/Table.svelte";
-    import { onMount } from "svelte";
-   // import '../getData.ts';
    import { data } from "$lib/store/appData";
 
 let response;
@@ -10,13 +8,11 @@ let response;
 let studyData = $derived($data['@graph'].filter((element) => {
     return element['@type'] === 'Dataset' && element['additionalType'] === 'Study';
 }));
-let studies = [];
 
 
-
-    function onchange(event) {
-        console.log('event call...');
-    }
+function onchange(event) {
+    console.log('event call...');
+}
 
 </script>
 

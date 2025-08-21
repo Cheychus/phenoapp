@@ -1,34 +1,20 @@
 <script lang="ts">
-    import Table from '$lib/components/Table.svelte';
-   // import type { PageProps } from './$types';
-    import {onMount} from "svelte";
+    import Table from "$lib/components/Table.svelte";
+    import { data } from "$lib/store/appData";
 
-   // let { data }: PageProps = $props();
+    let assayData = $derived(
+        $data["@graph"].filter((element) => {
+            return (
+                element["@type"] === "Dataset" &&
+                element["additionalType"] === "Assay"
+            );
+        }),
+    );
+    console.log(assayData);
 
-    let assayData = [];
-    let data;
-
-
-    onMount(async () => {
-        console.log('load Data...')
-        const response = await fetch('/'); // fetch from local proxy endpoint
-        data = await response.json();
-        console.log(data['@graph']);
-
-        // Extract Study Data
-        data['@graph'].forEach(element => {
-            if(element['@type'] === 'Dataset' && element['additionalType'] === 'Assay'){
-                assayData = [...assayData, element];
-            }
-        });
-        console.log(assayData);
-    });
-
-    function onchange(event){
-        console.log('do something');
+    function onchange(event) {
+        console.log("do something");
     }
-
-
 </script>
 
 <h1 class="text-center text-2xl font-bold p-2">Assay Data</h1>
