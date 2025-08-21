@@ -1,21 +1,20 @@
-<script lang='ts'>
+<script lang="ts">
     import Table from "$lib/components/Table.svelte";
-   import { data } from "$lib/store/appData";
+    import { arcData } from "$lib/store/appData";
 
-let response;
-// let data;
+    let studyData = $derived(
+        $arcData["@graph"].filter((element) => {
+            return (
+                element["@type"] === "Dataset" &&
+                element["additionalType"] === "Study"
+            );
+        }),
+    );
 
-let studyData = $derived($data['@graph'].filter((element) => {
-    return element['@type'] === 'Dataset' && element['additionalType'] === 'Study';
-}));
-
-
-function onchange(event) {
-    console.log('event call...');
-}
-
+    function onchange(event) {
+        console.log("event call...");
+    }
 </script>
-
 
 <h1 class="text-center text-2xl font-bold p-2">Study Data</h1>
 
@@ -25,5 +24,4 @@ function onchange(event) {
     {/each}
 </select>
 
-<Table tableData={studyData}/>
-
+<Table tableData={studyData} />

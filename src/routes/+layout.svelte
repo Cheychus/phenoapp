@@ -3,7 +3,7 @@
 	import favicon from '$lib/assets/favicon.svg';
     import Header from '$lib/components/Header.svelte';
 	import { onMount } from 'svelte'
-	import { data } from '$lib/store/appData';
+	import { arcData, studyData, assayData } from '$lib/store/appData';
 	
 	let { children } = $props();
 
@@ -15,20 +15,20 @@
 	onMount(async () => {
         console.log('load Data...')
         const response = await fetch('/'); // fetch from local proxy endpoint
-        $data = await response.json();
-        console.log($data['@graph']);
+        $arcData = await response.json();
+        console.log($arcData['@graph']);
 
         // Extract Study Data
-        // data['@graph'].forEach(element => {
-        //     if(element['@type'] === 'Dataset' && element['additionalType'] === 'Study'){
-        //         studyData = [...studyData, element];
-        //     }
+        $arcData['@graph'].forEach(element => {
+            if(element['@type'] === 'Dataset' && element['additionalType'] === 'Study'){
+                $studyData = [...$studyData, element];
+            }
 		// 	// Assay Data
-		// 	if(element['@type'] === 'Dataset' && element['additionalType'] === 'Assay'){
-        //         assayData = [...assayData, element];
-        //     }
+			if(element['@type'] === 'Dataset' && element['additionalType'] === 'Assay'){
+                $assayData = [...$assayData, element];
+            }
 
-        // });
+        });
         // console.log(studyData);
 		// console.log(assayData);
     });

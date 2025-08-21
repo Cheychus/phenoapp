@@ -1,9 +1,9 @@
 <script lang="ts">
     import Table from "$lib/components/Table.svelte";
-    import { data } from "$lib/store/appData";
+    import { arcData } from "$lib/store/appData";
 
     let assayData = $derived(
-        $data["@graph"].filter((element) => {
+        $arcData["@graph"].filter((element) => {
             return (
                 element["@type"] === "Dataset" &&
                 element["additionalType"] === "Assay"
