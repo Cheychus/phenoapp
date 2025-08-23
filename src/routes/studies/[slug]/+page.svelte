@@ -20,17 +20,22 @@
   );
   let processes = $derived(
     study?.about
-      ? study.about.map((e) => $arcData.getObjectByID(e["@id"]))
+      ? study.about.map((e) => arcData.getObjectByID(e["@id"]))
       : [],
   );
 </script>
 
 
-{#if !study}
+{#if $arcData["@graph"].length === 0}
+<p>Arc Data wird geladen...</p>
+{:else if !study}
   <p>Keine Studie mit dem Namen: <strong>{data.slug}</strong> gefunden</p>
+{:else}
+<p>Studie: <strong>{data.slug}</strong> geladen!</p>
 {/if}
 
-<table class="table">
+<div class="h-2/3 overflow-x-auto border">
+<table class="table table-pin-rows">
   <thead>
     <tr>
       <th>Source</th>
@@ -41,27 +46,32 @@
   <tbody>
     {#each processes as process}
       <tr>
-        <td>{$arcData.getObjectByID(process?.object["@id"]).name }</td>
+        <td>{arcData.getObjectByID(process?.object["@id"]).name }</td>
         <td
-          >{$arcData.getObjectByID(process.executesLabProtocol["@id"]).name}</td
+          >{arcData.getObjectByID(process?.executesLabProtocol["@id"]).name}</td
         >
-        <td>{$arcData.getObjectByID(process?.result["@id"]).name}</td>
+        <td>{arcData.getObjectByID(process?.result["@id"]).name}</td>
       </tr>
     {/each}
   </tbody>
 </table>
+</div>
 
-<!-- Open the modal using ID.showModal() method -->
-<button class="btn" onclick={openModal}>open modal</button>
-<dialog id="my_modal_1" class="modal">
-  <div class="modal-box">
-    <h3 class="text-lg font-bold">Hello!</h3>
-    <p class="py-4">Press ESC key or click the button below to close</p>
-    <div class="modal-action">
-      <form method="dialog">
-        <!-- if there is a button in form, it will close the modal -->
-        <button class="btn">Close</button>
-      </form>
+<div class="w-full">
+  <!-- Open the modal using ID.showModal() method -->
+  <button class="btn" onclick={openModal}>open modal</button>
+  <dialog id="my_modal_1" class="modal">
+    <div class="modal-box">
+      <h3 class="text-lg font-bold">Hello!</h3>
+      <p class="py-4">Press ESC key or click the button below to close</p>
+      <div class="modal-action">
+        <form method="dialog">
+          <!-- if there is a button in form, it will close the modal -->
+          <button class="btn">Close</button>
+        </form>
+      </div>
     </div>
-  </div>
-</dialog>
+  </dialog>
+</div>
+
+

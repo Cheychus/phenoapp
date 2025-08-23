@@ -39,8 +39,12 @@
 	<link rel="icon" href={favicon} />
 </svelte:head>
 
+<div class="flex flex-col h-screen">
+
 <Header />
-<div class="flex flex-col w-full justify-center p-2">
+<main class="flex-1 m-2 mt-18 h-screen border border-red-500 border-dotted justify-center overflow-auto">
 
 {@render children?.()}
+</main>
+
 </div>
