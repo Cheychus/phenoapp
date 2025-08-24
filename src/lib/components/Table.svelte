@@ -42,7 +42,7 @@
         console.log(selectedData);
 
     }
-    let selectedData = tableData[0].identifier;
+    let selectedData = tableData[0]?.identifier;
 
     function getDataByIdentifier(identifier: string) {
         return tableData.find(data => data.identifier === identifier);
