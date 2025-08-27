@@ -16,15 +16,16 @@
     // }
 </script>
 
-<h1 class="text-center text-2xl font-bold p-2">Study Data</h1>
+<main class="flex flex-col">
+    {#if studyData.length > 0}
+        <Table tableData={studyData}
+               tableType="study"
+               url="/explorer/studies"
+        />
+    {:else}
+        <p>Arc Data is loading...</p>
+    {/if}
 
+</main>
 
-{#if studyData.length > 0}
-    <Table tableData={studyData}
-           tableType="study"
-           url="/studies"
-    />
-{:else}
-    <p>Arc Data is loading...</p>
-{/if}
 

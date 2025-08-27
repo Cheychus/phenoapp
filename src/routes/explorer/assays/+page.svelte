@@ -15,13 +15,15 @@
 
 </script>
 
-<h1 class="text-center text-2xl font-bold p-2">Assay Data</h1>
+<main class="flex flex-col">
+    {#if assayData.length > 0}
+        <Table tableData={assayData}
+               tableType="assay"
+               url="/explorer/assays"
+        />
+    {:else}
+        <p>Arc data is loading...</p>
+    {/if}
+</main>
 
-{#if assayData.length > 0}
-    <Table tableData={assayData}
-           tableType="assay"
-           url="/assays"
-    />
-{:else}
-    <p>Arc data is loading...</p>
-{/if}
+
