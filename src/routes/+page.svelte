@@ -14,7 +14,7 @@
             <p class="text-primary-content italic">phenoapp makes exploring arc metadata easy with an intuitive web interface and tools for displaying data</p>
 
             <div class="flex w-full gap-12">
-                <button class="btn btn-lg btn-secondary" onclick={() => {goto("/setup")}}>Get started</button>
+                <button class="btn btn-lg btn-accent" onclick={() => {goto("/setup")}}>Get started</button>
             </div>
         </div>
 
