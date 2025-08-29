@@ -15,7 +15,7 @@ import {goto} from "$app/navigation";
             <option>Arc 3</option>
         </select>
 
-        <button class="btn btn-primary" onclick={() => goto('/explorer/overview')}>Explore Arc</button>
+        <button class="btn btn-accent" onclick={() => goto('/explorer/overview')}>Explore Arc</button>
     </div>
 
 

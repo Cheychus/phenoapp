@@ -5,13 +5,10 @@
 	import { onMount } from 'svelte'
 	import { arcData, studyData, assayData } from '$lib/store/appData';
 	import Breadcrump from "$lib/components/Breadcrump.svelte";
+
+	import { userSettings } from "$lib/store/UserSettings.svelte.js";
 	
 	let { children } = $props();
-
-
-	// let {data = $state({})} = $props();
-	// let studyData = [];
-	// let assayData = [];
 
 	onMount(async () => {
         console.log('load Data...')
@@ -33,54 +30,8 @@
             }
 
         });
-        // console.log(studyData);
-		// console.log(assayData);
     });
 
-	const themes = [
-		"ipk",
-		"light",
-		"dark",
-		"cupcake",
-		"bumblebee",
-		"--default",
-		"emerald",
-		"corporate",
-		"synthwave",
-		"--prefersdark",
-		"retro",
-		"cyberpunk",
-		"valentine",
-		"halloween",
-		"garden",
-		"forest",
-		"aqua",
-		"lofi",
-		"pastel",
-		"fantasy",
-		"wireframe",
-		"black",
-		"luxury",
-		"dracula",
-		"cmyk",
-		"autumn",
-		"business",
-		"acid",
-		"lemonade",
-		"night",
-		"coffee",
-		"winter",
-		"dim",
-		"nord",
-		"sunset",
-		"caramellatte",
-		"abyss",
-		"silk",
-	];
-
-
-
-	let currentTheme = $state("ipk");
 
 </script>
 
@@ -89,9 +40,9 @@
 	<link rel="icon" href={favicon} />
 </svelte:head>
 
-<div data-theme={currentTheme} class="font-oswald flex flex-col h-screen">
+<div data-theme={userSettings.theme} class="font-oswald flex flex-col h-screen">
 
-<Header {themes} bind:currentTheme />
+<Header />
 <main class="flex-1 justify-center overflow-auto">
 
 	<section class="mx-layout">
