@@ -111,7 +111,7 @@
         <tbody>
         {#each pagination.paginatedEntrys as process, i}
             <tr>
-                <td>{i} {arcData.getObjectByID(process?.object["@id"]).name }</td>
+                <td>{(i+1) + pagination.currentPage * pagination.maxEntries} - {arcData.getObjectByID(process?.object["@id"]).name }</td>
                 <td
                 >{arcData.getObjectByID(process?.executesLabProtocol["@id"]).name}</td
                 >
@@ -123,8 +123,16 @@
 </div>
 
 <div class="w-full grid grid-cols-[1fr_2fr_2fr_1fr] gap-2">
-    <button onclick={() => pagination.currentPage = 0} class="btn btn-secondary">Start</button>
-    <button onclick={() => pagination.prevPage()} class="btn btn-primary"> Previous Page</button>
-    <button onclick={() => pagination.nextPage()} class="btn btn-primary"> Next Page</button>
-    <button onclick={() => pagination.currentPage = pagination.maxPages} class="btn btn-secondary">End</button>
+    <button onclick={() => pagination.currentPage = 0} class="btn btn-secondary"
+    >Start
+    </button>
+    <button onclick={() => pagination.prevPage()} class="btn btn-primary"
+            class:btn-disabled={pagination.currentPage === 0}
+    > Previous Page
+    </button>
+    <button onclick={() => pagination.nextPage()} class="btn btn-primary"
+    class:btn-disabled={pagination.currentPage === pagination.maxPages}
+    > Next Page</button>
+    <button onclick={() => pagination.currentPage = pagination.maxPages} class="btn btn-secondary"
+    >End</button>
 </div>
