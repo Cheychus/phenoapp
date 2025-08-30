@@ -10,27 +10,27 @@
 	
 	let { children } = $props();
 
-	onMount(async () => {
-        console.log('load Data...')
-        const response = await fetch('/'); // fetch from local proxy endpoint
-		if(!response){
-			return console.error('Error fetching Data...');
-		}
-        $arcData = await response.json();
-        console.log($arcData['@graph']);
-
-        // Extract Study Data
-        $arcData['@graph'].forEach(element => {
-            if(element['@type'] === 'Dataset' && element['additionalType'] === 'Study'){
-                $studyData = [...$studyData, element];
-            }
-		// 	// Assay Data
-			if(element['@type'] === 'Dataset' && element['additionalType'] === 'Assay'){
-                $assayData = [...$assayData, element];
-            }
-
-        });
-    });
+	// onMount(async () => {
+    //     console.log('load Data...')
+    //     const response = await fetch('/'); // fetch from local proxy endpoint
+	// 	if(!response){
+	// 		return console.error('Error fetching Data...');
+	// 	}
+    //     $arcData = await response.json();
+    //     console.log($arcData['@graph']);
+	//
+    //     // Extract Study Data
+    //     $arcData['@graph'].forEach(element => {
+    //         if(element['@type'] === 'Dataset' && element['additionalType'] === 'Study'){
+    //             $studyData = [...$studyData, element];
+    //         }
+	// 	// 	// Assay Data
+	// 		if(element['@type'] === 'Dataset' && element['additionalType'] === 'Assay'){
+    //             $assayData = [...$assayData, element];
+    //         }
+	//
+    //     });
+    // });
 
 
 </script>

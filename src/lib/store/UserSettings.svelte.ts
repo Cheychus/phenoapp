@@ -1,9 +1,12 @@
-import { browser } from '$app/environment';
+import {browser} from '$app/environment';
 
 class UserSettings {
 
     theme =  $state("");
-    arcs = [];
+    arcs: { name: string; url: string; content: string}[] = $state([]);
+    selectedArc = $state("Arc Name or ID");
+    // downloads: { name: string; url: string; content: string}[] = $state([]);
+
 
     constructor() {
         if(browser){
@@ -11,19 +14,36 @@ class UserSettings {
             if(theme){
                 this.theme = theme;
             }
-        }
-    }
 
-    getStorageItem(key: string): string {
-        if(browser){
-            return localStorage.getItem(key) || "";
+            this.arcs = this.getArcs();
+            console.log(this.arcs);
         }
-        return "";
     }
 
     saveTheme() {
         localStorage.setItem("theme", this.theme);
     }
+
+    isArcExisting(url: string): boolean {
+        return this.arcs.some(el => el.url === url);
+    }
+
+
+
+    saveArcs(){
+        localStorage.setItem('arcs', JSON.stringify(this.arcs));
+    }
+
+    getArcs() {
+        const arcs = localStorage.getItem("arcs");
+        if(arcs){
+            return JSON.parse(arcs);
+        }else {
+            return [];
+        }
+    }
+
+
 
 }
 
