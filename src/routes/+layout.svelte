@@ -10,27 +10,27 @@
 	
 	let { children } = $props();
 
-	// onMount(async () => {
-    //     console.log('load Data...')
-    //     const response = await fetch('/'); // fetch from local proxy endpoint
-	// 	if(!response){
-	// 		return console.error('Error fetching Data...');
-	// 	}
-    //     $arcData = await response.json();
-    //     console.log($arcData['@graph']);
-	//
-    //     // Extract Study Data
-    //     $arcData['@graph'].forEach(element => {
-    //         if(element['@type'] === 'Dataset' && element['additionalType'] === 'Study'){
-    //             $studyData = [...$studyData, element];
-    //         }
-	// 	// 	// Assay Data
-	// 		if(element['@type'] === 'Dataset' && element['additionalType'] === 'Assay'){
-    //             $assayData = [...$assayData, element];
-    //         }
-	//
-    //     });
-    // });
+	onMount(async () => {
+        console.log('load Data...')
+        const response = await fetch('/?target=https://git.nfdi4plants.org/api/v4/projects/2928/packages/generic/isa_arc_json/0.0.1/arc-ro-crate-metadata.json'); // fetch from local proxy endpoint
+		if(!response){
+			return console.error('Error fetching Data...');
+		}
+        $arcData = await response.json();
+        console.log($arcData['@graph']);
+	
+        // Extract Study Data
+        $arcData['@graph'].forEach(element => {
+            if(element['@type'] === 'Dataset' && element['additionalType'] === 'Study'){
+                $studyData = [...$studyData, element];
+            }
+		// 	// Assay Data
+			if(element['@type'] === 'Dataset' && element['additionalType'] === 'Assay'){
+                $assayData = [...$assayData, element];
+            }
+	
+        });
+    });
 
 
 </script>

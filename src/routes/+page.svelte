@@ -1,5 +1,5 @@
 <script>
-    import image from "$lib/assets/ARC-isa-cwl-decorations.png";
+    // import image from "$lib/assets/ARC-isa-cwl-decorations.png";
     import {goto} from "$app/navigation";
 
     export let username = 'world';
@@ -19,7 +19,7 @@
         </div>
 
         <div class="w-1/2 p-8 flex justify-center items-center h-full">
-            <img src={image} alt="Image showing nice website features or another big eyecatcher. Not final yet">
+            <!-- <img src={image} alt="Image showing nice website features or another big eyecatcher. Not final yet"> -->
         </div>
     </div>
 
