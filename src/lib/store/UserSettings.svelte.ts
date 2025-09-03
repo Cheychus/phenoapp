@@ -1,22 +1,32 @@
-import {browser} from '$app/environment';
+import { browser } from '$app/environment';
+import type { Arc } from './Database.svelte';
+import { db } from './Database.svelte';
+import { arcData } from './ArcData.svelte';
 
 class UserSettings {
 
-    theme =  $state("");
-    arcs: { name: string; url: string; content: string}[] = $state([]);
-    selectedArc = $state("Arc Name or ID");
-    // downloads: { name: string; url: string; content: string}[] = $state([]);
+    theme = $state("");
+    arcs: Arc[] = $state<Arc[]>([]);
+    selectedArc = $state<Arc>();
+    selectedArcId = $state("");
 
+    constructor() { }
 
-    constructor() {
-        if(browser){
+    // init user setting if browser is loaded
+    init() {
+        if (browser) {
             const theme = localStorage.getItem("theme");
-            if(theme){
+            if (theme) {
                 this.theme = theme;
             }
 
-            this.arcs = this.getArcs();
-            console.log(this.arcs);
+            const selectedArcId = localStorage.getItem('selectedArcId');
+            if (selectedArcId) {
+    
+                this.selectedArcId = selectedArcId;
+                this.selectArc();
+            }
+
         }
     }
 
@@ -24,26 +34,36 @@ class UserSettings {
         localStorage.setItem("theme", this.theme);
     }
 
-    isArcExisting(url: string): boolean {
-        return this.arcs.some(el => el.url === url);
+    isArcExisting(id: string): boolean {
+        return this.arcs.some(el => el.id === id);
     }
 
-
-
-    saveArcs(){
-        localStorage.setItem('arcs', JSON.stringify(this.arcs));
+    async addArc(arc: Arc) {
+        await db.instance.addArc(arc);
+        this.arcs = await db.instance.getArcs();
     }
 
-    getArcs() {
-        const arcs = localStorage.getItem("arcs");
-        if(arcs){
-            return JSON.parse(arcs);
-        }else {
-            return [];
+    async removeArc(id: string) {
+        await db.instance.removeArc(id);
+        this.arcs = await db.instance.getArcs();
+    }
+
+    findArc(url: string): Arc | undefined {
+        return this.arcs.find((arc) => arc.url === url);
+    }
+
+    selectArc() {
+        console.log("select Arc ID: ", this.selectedArcId);
+        localStorage.setItem('selectedArcId', this.selectedArcId);
+
+        const arc = this.arcs.find((el) => el.id === Number(this.selectedArcId));
+        if (arc) {
+            this.selectedArc = arc;
+            arcData.init(arc);
+        } else {
+            console.error(`No arc with id: ${this.selectedArcId} found!`);
         }
     }
-
-
 
 }
 
@@ -51,43 +71,50 @@ export const userSettings = new UserSettings();
 
 
 
+
+
+
+
+
+
+
 export const themes = [
     "ipk",
     "light",
-   // "dark",
+    // "dark",
     "cupcake",
     "bumblebee",
     // "--default",
     "emerald",
     "corporate",
-   //  "synthwave",
-   //  "--prefersdark",
-  //   "retro",
+    //  "synthwave",
+    //  "--prefersdark",
+    //   "retro",
     "cyberpunk",
-  //   "valentine",
-   //  "halloween",
-   //  "garden",
-   //  "forest",
-  //   "aqua",
+    //   "valentine",
+    //  "halloween",
+    //  "garden",
+    //  "forest",
+    //   "aqua",
     "lofi",
-  //   "pastel",
+    //   "pastel",
     "fantasy",
-  //   "wireframe",
-  //   "black",
-  //   "luxury",
-   //  "dracula",
+    //   "wireframe",
+    //   "black",
+    //   "luxury",
+    //  "dracula",
     "cmyk",
-  //   "autumn",
-  //   "business",
-   //  "acid",
-  //   "lemonade",
-  //   "night",
-  //   "coffee",
-  //   "winter",
-  //   "dim",
+    //   "autumn",
+    //   "business",
+    //  "acid",
+    //   "lemonade",
+    //   "night",
+    //   "coffee",
+    //   "winter",
+    //   "dim",
     "nord",
-   //  "sunset",
-  //   "caramellatte",
-   //  "abyss",
+    //  "sunset",
+    //   "caramellatte",
+    //  "abyss",
     "silk",
 ];

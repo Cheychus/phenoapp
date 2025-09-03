@@ -1,18 +1,15 @@
 <script lang="ts">
-    import {arcData} from "$lib/store/appData";
-    import {derived} from "svelte/store";
+    import {arcData} from "$lib/store/ArcData.svelte";
 
     let {identifier} = $props();
 
-    let studyOrAssay = $derived(
-        $arcData['@graph'].find((e) => {
+    let studyOrAssay = arcData.graph.find((e) => {
             return e.identifier === identifier;
         })
-    )
 
     let processes = $derived(
         studyOrAssay?.about
-            ? studyOrAssay.about.map((e) => arcData.getObjectByID(e["@id"]))
+            ? studyOrAssay.about.map((e) => arcData.getObjectById(e["@id"]))
             : [],
     );
 
@@ -54,12 +51,12 @@
     }
 
     const pagination = createPagination();
-    $effect(() => pagination.debug());
+    // $effect(() => pagination.debug());
 
 
 </script>
 
-{#if $arcData["@graph"].length === 0}
+{#if arcData.graph.length === 0}
     <p>Arc Data is loading...</p>
 {:else if !studyOrAssay}
     <p>No Study or Assay with the name: <strong>{identifier}</strong> was found!</p>
@@ -111,11 +108,11 @@
         <tbody>
         {#each pagination.paginatedEntrys as process, i}
             <tr>
-                <td>{(i+1) + pagination.currentPage * pagination.maxEntries} - {arcData.getObjectByID(process?.object["@id"]).name }</td>
+                <td>{(i+1) + pagination.currentPage * pagination.maxEntries} - {arcData.getObjectById(process?.object["@id"]).name }</td>
                 <td
-                >{arcData.getObjectByID(process?.executesLabProtocol["@id"]).name}</td
+                >{arcData.getObjectById(process?.executesLabProtocol["@id"]).name}</td
                 >
-                <td>{arcData.getObjectByID(process?.result["@id"]).name}</td>
+                <td>{arcData.getObjectById(process?.result["@id"]).name}</td>
             </tr>
         {/each}
         </tbody>

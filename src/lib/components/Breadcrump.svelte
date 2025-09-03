@@ -2,7 +2,7 @@
     import {page} from '$app/state'
 
     let segments = $derived(() => {
-        console.log(segments.length);
+        // console.log(segments.length);
         return page.url.pathname.split('/').filter(Boolean);
     });
 

@@ -1,31 +1,16 @@
 <script lang="ts">
     import Table from "$lib/components/Table.svelte";
-    import {arcData} from "$lib/store/appData";
-
-    let studyData = $derived(
-        $arcData["@graph"].filter((element) => {
-            return (
-                element["@type"] === "Dataset" &&
-                element["additionalType"] === "Study"
-            );
-        }),
-    );
-
-    // function onchange(event) {
-    //     console.log("event call...");
-    // }
+    import { arcData } from "$lib/store/ArcData.svelte";
 </script>
 
 <main class="flex flex-col">
-    {#if studyData.length > 0}
-        <Table tableData={studyData}
-               tableType="study"
-               url="/explorer/studies"
+    {#if arcData.studyData.length > 0}
+        <Table
+            tableData={arcData.studyData}
+            tableType="study"
+            url="/explorer/studies"
         />
     {:else}
-        <p>Arc Data is loading...</p>
+        <p>This Arc does not contain Study-Data</p>
     {/if}
-
 </main>
-
-

@@ -1,29 +1,16 @@
 <script lang="ts">
     import Table from "$lib/components/Table.svelte";
-    import {arcData} from "$lib/store/appData";
-
-    let assayData = $derived(
-        $arcData["@graph"].filter((element) => {
-            return (
-                element["@type"] === "Dataset" &&
-                element["additionalType"] === "Assay"
-            );
-        }),
-    );
-    //  console.log(assayData);
-
-
+    import { arcData } from "$lib/store/ArcData.svelte";
 </script>
 
 <main class="flex flex-col">
-    {#if assayData.length > 0}
-        <Table tableData={assayData}
-               tableType="assay"
-               url="/explorer/assays"
+    {#if arcData.assayData.length > 0}
+        <Table
+            tableData={arcData.assayData}
+            tableType="assay"
+            url="/explorer/assays"
         />
     {:else}
-        <p>Arc data is loading...</p>
+        <p>This Arc does not contain Assay-Data</p>
     {/if}
 </main>
-
-
