@@ -1,57 +1,83 @@
 <script lang="ts">
+    let {tableData, tableType, url} = $props();
 
- export let tableData = [];
- console.log(tableData);
+    // console.log(tableData);
 
-// Extract unique Keys from table Data
+    // Extract unique Keys from table Data
+    let headers: Array<any> = $state([]);
 
-let headers = [];
-// reactive statement needed because data will change after the fetch call is complete
-$: if (tableData.length > 0) {
     const tableHeader = new Set();
-    tableData.forEach(element => {
+    tableData.forEach((element) => {
         const keys = Object.keys(element);
-        keys.forEach(key => {
-            tableHeader.add(key);
+        keys.forEach((key) => {
+            if (lookupHeaderName(key)) {
+                tableHeader.add(key);
+            }
             // console.log(key);
         });
     });
     headers = Array.from(tableHeader);
-   // console.log(headers);
-}
+    // console.log(headers);
 
-function lookupHeaderName(key : string) {
-    let mapping = {
-        'about' : 'Processes',
-        'hasPart' : 'Data Files',
-        'identifier' : 'Name',
-        'dateModified' : 'last modified'
+    function lookupHeaderName(key: string) {
+        let mapping = {
+            about: "Processes",
+            hasPart: "Data Files",
+            // 'identifier': 'Name',
+            dateModified: "last modified",
+            comment: "Comments",
+        };
+        return mapping[key] ? mapping[key] : false;
     }
-    return mapping[key]?mapping[key]:key;
-}
 
+    function onchange() {
+        console.log("onchange select");
+        console.log(selectedData);
+    }
+
+    let selectedData = $state(tableData[0]?.identifier);
+
+    function getDataByIdentifier(identifier: string) {
+        return tableData.find((data) => data.identifier === identifier);
+    }
 </script>
 
-<!-- {#if tableData.length > 0}
- { tableData[0].name }
-{/if} -->
-<table class="h-8 max-h-8 ">
-<thead class="bg-gray-100">
-    <tr>
-        {#each headers as header}
-        <th class="p-2 border">{lookupHeaderName(header)}</th>
-        {/each}
-    </tr>
-</thead>
-<tbody>
-        {#each tableData as row}
-    <tr class="max-h-8 text-nowrap overflow-auto max-w-24 w-24">
-        {#each headers as header}
-            <td class="p-2 border max-w-md overflow-auto">
-                {JSON.stringify(row[header])}
-            </td>
+<section>
+    <div class="p-2 bg-base-200 rounded-md">
+        <div class="grid grid-cols-2 items-start">
+            <div class="px-2 font-bold h-full flex items-center">
+                Select {tableType}:
+            </div>
+            <select
+                id="dataSelect"
+                bind:value={selectedData}
+                {onchange}
+                class="select select-md m-0 select-primary border p-1 mb-1 max-w-32 rounded-sm"
+            >
+                {#each tableData as data}
+                    <option value={data.identifier}>{data.identifier}</option>
+                {/each}
+            </select>
+            <div class="col-span-2 divider divider-primary m-0"></div>
+
+            {#each headers as header}
+                <div class="p-2 font-bold border-b border-b-gray-300">
+                    {lookupHeaderName(header)}
+                </div>
+                <div class="p-2 border-b border-b-gray-300">
+                    {#if header === "about"}
+                        <a
+                            class="link text-blue-400"
+                            href={`${url}/${getDataByIdentifier(selectedData)["identifier"]}`}
+                            >Link</a
+                        >
+                    {:else}
+                        {JSON.stringify(
+                            getDataByIdentifier(selectedData)[header],
+                        )}
+                    {/if}
+                </div>
             {/each}
-    </tr>
-         {/each}
-</tbody>
-</table>
+        </div>
+    </div>
+</section>

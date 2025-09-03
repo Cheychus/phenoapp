@@ -1,46 +1,40 @@
 <script lang="ts">
-	import '../app.css';
-	import favicon from '$lib/assets/favicon.svg';
-    import Header from '$lib/components/Header.svelte';
-	import { onMount } from 'svelte'
-	import { data } from '$lib/store/appData';
-	
+	import "../app.css";
+	import favicon from "$lib/assets/favicon.svg";
+	import Header from "$lib/components/Header.svelte";
+	import Breadcrump from "$lib/components/Breadcrump.svelte";
+	import { userSettings } from "$lib/store/UserSettings.svelte.js";
+	import { db } from "$lib/store/Database.svelte";
+	import { onMount } from "svelte";
+	import type { Arc } from "$lib/store/Database.svelte";
+
 	let { children } = $props();
-
-
-	// let {data = $state({})} = $props();
-	// let studyData = [];
-	// let assayData = [];
+	let arcs = $state<Arc[]>([]);
 
 	onMount(async () => {
-        console.log('load Data...')
-        const response = await fetch('/'); // fetch from local proxy endpoint
-        $data = await response.json();
-        console.log($data['@graph']);
-
-        // Extract Study Data
-        // data['@graph'].forEach(element => {
-        //     if(element['@type'] === 'Dataset' && element['additionalType'] === 'Study'){
-        //         studyData = [...studyData, element];
-        //     }
-		// 	// Assay Data
-		// 	if(element['@type'] === 'Dataset' && element['additionalType'] === 'Assay'){
-        //         assayData = [...assayData, element];
-        //     }
-
-        // });
-        // console.log(studyData);
-		// console.log(assayData);
-    });
-
+		await db.init();
+		arcs = await db.instance.getArcs();
+		userSettings.arcs = arcs;
+		const find = userSettings.arcs.find((el) => el.id === "2928");
+		console.log("find arc:", find);
+		            
+		userSettings.init();
+	});
 </script>
 
 <svelte:head>
 	<link rel="icon" href={favicon} />
 </svelte:head>
 
-<Header />
-<div class="flex flex-col w-full justify-center p-2">
+<div data-theme={userSettings.theme} class="font-oswald flex flex-col h-screen">
+	<Header />
+	<main class="flex-1 justify-center overflow-auto">
+		<div class="toast toast-end"></div>
 
-{@render children?.()}
+		<section class="mx-layout">
+			<Breadcrump />
+		</section>
+
+		{@render children?.()}
+	</main>
 </div>

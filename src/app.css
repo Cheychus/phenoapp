@@ -1,2 +1,51 @@
 @import 'tailwindcss';
+@import url("https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap");
 @plugin 'daisyui';
+
+@theme {
+    --font-oswald: 'Oswald', sans-serif;
+    --spacing-10p: 10%;
+    --spacing-layout: 15%;
+}
+
+
+@plugin "daisyui/theme" {
+    name: "ipk";
+    default: true;
+    prefersdark: false;
+    color-scheme: "light";
+    --color-base-100: #FFFFFF;
+    --color-base-200: #f9f9f9;
+    --color-base-300: #ECECEC;
+    --color-base-content: oklch(0% 0 0);
+    --color-primary: #288000;
+    --color-primary-content: oklch(100% 0 0);
+    --color-secondary: #006666;
+    --color-secondary-content: #ffffff;
+    --color-accent: #800068;
+    --color-accent-content: oklch(100% 0 0);
+    --color-neutral: #2D3E50;
+    --color-neutral-content: oklch(100% 0 0);
+    --color-info: #0BB5DD;
+    --color-info-content: #ffffff;
+    --color-success: #44D700;
+    --color-success-content: oklch(0% 0 0);
+    --color-warning: oklch(82% 0.189 84.429);
+    --color-warning-content: oklch(0% 0 0);
+    --color-error: #E62900;
+    --color-error-content: #ffffff;
+    --radius-selector: 0.5rem;
+    --radius-field: 0.25rem;
+    --radius-box: 0.5rem;
+    --size-selector: 0.25rem;
+    --size-field: 0.25rem;
+    --border: 1px;
+    --depth: 1;
+    --noise: 0;
+}
+
+@plugin "daisyui" {
+    themes: all;
+}
+
+
