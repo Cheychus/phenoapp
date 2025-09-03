@@ -52,7 +52,7 @@
                 id="dataSelect"
                 bind:value={selectedData}
                 {onchange}
-                class="select select-md m-0 select-primary border p-1 mb-1 max-w-32 rounded-sm"
+                class="select select-md m-0 select-primary border p-2 mb-1 w-fit pr-8 rounded-sm"
             >
                 {#each tableData as data}
                     <option value={data.identifier}>{data.identifier}</option>

@@ -27,7 +27,7 @@
     --color-neutral: #2D3E50;
     --color-neutral-content: oklch(100% 0 0);
     --color-info: #0BB5DD;
-    --color-info-content: #ffffff;
+    --color-info-content: #000000;
     --color-success: #44D700;
     --color-success-content: oklch(0% 0 0);
     --color-warning: oklch(82% 0.189 84.429);

@@ -10,7 +10,7 @@
 
     onMount(async () => {
         projects = await fetchProjects(
-            "https://git.nfdi4plants.org/api/v4/projects/?per_page=10&page=1",
+            "https://git.nfdi4plants.org/api/v4/projects/?per_page=100&page=1",
         );
 
         // console.log(arcs, " arcs from db");
