@@ -10,10 +10,16 @@ class UserSettings {
     selectedArc = $state<Arc>();
     selectedArcId = $state("");
 
+    options = $state({
+        autoDownloadImages: false,
+        anotherOption: true,
+    })
+
     constructor() { }
 
     // init user setting if browser is loaded
     init() {
+        console.log("init() --> userSettings");
         if (browser) {
             const theme = localStorage.getItem("theme");
             if (theme) {

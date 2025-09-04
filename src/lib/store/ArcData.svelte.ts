@@ -1,12 +1,15 @@
 import type { Arc } from "./Database.svelte";
+import type {Organization, Person} from "$lib/types/types";
 
 class ArcData {
     arc = $state<Arc>();
-    context = $state([]);
-    graph = $state([]);
-    //  arcData = $state([])
-    studyData = $state([]);
-    assayData = $state([]);
+    context = [];
+    graph = [];
+    studyData = [];
+    assayData = [];
+
+    organizations: Organization[] = [];
+    persons: Person[] = [];
 
     
 
@@ -15,6 +18,7 @@ class ArcData {
     }
 
     init(arc: Arc) {
+        console.log("init arc -->", arc.name);
         this.arc = arc;
         this.graph = arc.content['@graph'];
 
@@ -23,17 +27,16 @@ class ArcData {
             return (
                 el["@type"] === "Dataset" && el["additionalType"] === "Study"
             )
-        })
-
+        });
         // Extract Assay Data
         this.assayData = this.graph.filter((el) => {
             return (
                 el["@type"] === "Dataset" && el["additionalType"] === "Assay"
             )
-        })
+        });
+        this.organizations = this.graph.filter((el) => el["@type"] === "Organization");
+        this.persons = this.graph.filter((el) => el["@type"] === "Person");
     }
-
-
 
 }
 

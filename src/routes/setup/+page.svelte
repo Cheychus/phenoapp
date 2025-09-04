@@ -1,19 +1,17 @@
 <script lang="ts">
     import DownloadArc from "$lib/components/DownloadArc.svelte";
-    import { goto } from "$app/navigation";
-    import { userSettings } from "$lib/store/UserSettings.svelte";
-    import { onMount } from "svelte";
-    import { showToast } from "$lib/utils/toast";
+    import {goto} from "$app/navigation";
+    import {userSettings} from "$lib/store/UserSettings.svelte";
+    import {onMount} from "svelte";
     import Loader from "$lib/components/Loader.svelte";
+    import {projectStore} from "$lib/store/ProjectsStore.svelte";
 
-    let projects: JSON[] = $state([]);
+   //  let projects: JSON[] = $state([]);
+   //  let download = $state(true);
 
     onMount(async () => {
-        projects = await fetchProjects(
-            "https://git.nfdi4plants.org/api/v4/projects/?per_page=100&page=1",
-        );
-
-        // console.log(arcs, " arcs from db");
+        // get all projects from api
+        await projectStore.init();
     });
 
     async function fetchProjects(url: string) {
@@ -34,9 +32,9 @@
 
     <div class="flex gap-2">
         <select
-            bind:value={userSettings.selectedArcId}
-            onchange={() => userSettings.selectArc()}
-            class="select select-primary"
+                bind:value={userSettings.selectedArcId}
+                onchange={() => userSettings.selectArc()}
+                class="select select-primary"
         >
             <option disabled value="">Select your Arcs here</option>
             {#each userSettings.arcs as arc}
@@ -45,8 +43,9 @@
         </select>
 
         <button
-            class="btn btn-accent"
-            onclick={() => goto("/explorer/overview")}>Explore Arc</button
+                class="btn btn-accent"
+                onclick={() => goto("/explorer/overview")}>Explore Arc
+        </button
         >
     </div>
 
@@ -56,43 +55,43 @@
     <div class="flex gap-2 items-center">
         <label class="input input-primary">
             <svg
-                class="h-[1em] opacity-50"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
+                    class="h-[1em] opacity-50"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
             >
                 <g
-                    stroke-linejoin="round"
-                    stroke-linecap="round"
-                    stroke-width="2.5"
-                    fill="none"
-                    stroke="currentColor"
+                        stroke-linejoin="round"
+                        stroke-linecap="round"
+                        stroke-width="2.5"
+                        fill="none"
+                        stroke="currentColor"
                 >
                     <circle cx="11" cy="11" r="8"></circle>
                     <path d="m21 21-4.3-4.3"></path>
                 </g>
             </svg>
-            <input type="search" class="grow" placeholder="Search Arcs" />
+            <input type="search" class="grow" placeholder="Search Arcs"/>
         </label>
 
-        {#if projects.length <= 0}
-            <Loader />
+        {#if projectStore.downloadProjects}
+            <Loader/>
         {:else}
-            <p>{projects.length} Arcs found</p>
+            <p>{projectStore.projects.length} Arcs found</p>
         {/if}
     </div>
     <div class="w-2/3 flex flex-col gap-2">
         <div class="flex flex-col gap-2">
-            {#if projects.length <= 0}
-                <Loader loadType="skeleton" />
-                <Loader loadType="skeleton" />
-                <Loader loadType="skeleton" />
-                <Loader loadType="skeleton" />
-                <Loader loadType="skeleton" />
+            {#if projectStore.projects.length <= 0}
+                <Loader loadType="skeleton"/>
+                <Loader loadType="skeleton"/>
+                <Loader loadType="skeleton"/>
+                <Loader loadType="skeleton"/>
+                <Loader loadType="skeleton"/>
             {/if}
         </div>
 
-        {#each projects as project}
-            <DownloadArc {...project} baseUrl="http://git.nfdi4plants.org" />
+        {#each projectStore.projects as project}
+            <DownloadArc {...project} baseUrl="http://git.nfdi4plants.org"/>
         {/each}
     </div>
 </section>

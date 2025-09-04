@@ -15,11 +15,9 @@
 		await db.init();
 		arcs = await db.instance.getArcs();
 		userSettings.arcs = arcs;
-		const find = userSettings.arcs.find((el) => el.id === 2928);
-		console.log("find arc:", find);
-		            
 		userSettings.init();
 	});
+
 </script>
 
 <svelte:head>
