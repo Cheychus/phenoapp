@@ -21,3 +21,15 @@ export interface Person {
 export interface Organization {
     name: string;
 }
+
+export interface Assay {
+    about?: Array<any>
+}
+
+export interface Graph {
+    identifier: number
+}
+
+export interface GraphNode {
+    identifier: string;
+}

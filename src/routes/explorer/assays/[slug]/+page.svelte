@@ -8,7 +8,7 @@
 
 
 <section class="p-4">
-    <ProcessTable identifier={data.slug} />
+    <ProcessTable identifier={data.slug} type={"assay"} />
 </section>
 
 
