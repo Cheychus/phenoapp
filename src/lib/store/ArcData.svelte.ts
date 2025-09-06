@@ -1,5 +1,7 @@
 import type { Arc } from "./Database.svelte";
 import type {Assay, Organization, Person} from "$lib/types/types";
+import { PathResolver } from "$lib/services/PathResolver";
+import { resourceStore } from "./ResourceStore.svelte";
 
 class ArcData {
     arc = $state<Arc>();
@@ -18,7 +20,8 @@ class ArcData {
     }
 
     init(arc: Arc) {
-        console.log("init arc -->", arc.name);
+        console.log("init arc -->", arc.id);
+        resourceStore.init(Number(arc.id));
         this.arc = arc;
         this.graph = arc.content['@graph'];
 
@@ -37,7 +40,7 @@ class ArcData {
         this.organizations = this.graph.filter((el) => el["@type"] === "Organization");
         this.persons = this.graph.filter((el) => el["@type"] === "Person");
 
-
+    
     }
 
     // url="https://git.nfdi4plants.org/api/v4/projects/{arcData.arc?.id}/repository/files/{encodeURIComponent(getPictureUrlPath(arcData.getObjectById(process.result['@id']).name))}/raw?lfs=true"

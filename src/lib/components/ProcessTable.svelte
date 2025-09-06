@@ -7,19 +7,21 @@
   import Pagination from "./Pagination.svelte";
   import MarkdownView from "./MarkdownView.svelte";
   import type { Assay, GraphNode } from "$lib/types/types";
+    import SampleView from "./ArcResourceView.svelte";
+    import ArcResourceView from "./ArcResourceView.svelte";
 
   let { identifier, type } = $props();
 
   let processData: any = arcData.graph.find((e: GraphNode) => e.identifier === identifier) ?? {};
 
-  console.log(processData);
+  // console.log(processData);
   let processes = $state<any[]>([]);
   let tableObjects: any[] = [];
   if (processData){
     const about = processData.about ?? [];
-    console.log(about);
+    // console.log(about, "about");
     processes = about.map((e) => arcData.getObjectById(e["@id"]));
-    console.log(processes, "processes");
+    // console.log(processes, "processes");
 
 
     processes.forEach((process) => {
@@ -29,7 +31,8 @@
       const executesLabProtocol = process.executesLabProtocol;
       const protocol = executesLabProtocol?.["@id"] ? arcData.getObjectById(executesLabProtocol["@id"]) : null;
 
-      const sample = 'test';
+      const result = process.result ?? null;
+      const sample = object?.["@id"] ? arcData.getObjectById(result["@id"]) : null;
 
       const tableObj = {
         source,
@@ -39,7 +42,7 @@
       tableObjects.push(tableObj);
     });
 
-    console.log(tableObjects);
+//     console.log(tableObjects);
 
   }
   
@@ -121,106 +124,21 @@
                 showModal();
               }}
             >
-              <!-- {arcData.getObjectById(process?.object["@id"]).name} -->
-               {process.source.name}
+               <ArcResourceView sample={process.source}/>
             </button>
           </div>
 
           <!-- Column 3 -->
           <div class="flex items-center gap-2">
-            {process.protocol.name}
-            <!-- {#if isMarkdownType(arcData.getObjectById(process?.executesLabProtocol["@id"]).name)}
-              <button class="btn">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25"
-                  />
-                </svg>
-                {getMarkdownName(arcData.getObjectById(process?.executesLabProtocol["@id"]).name)}
-              </button>
-              <MarkdownView url={getCleanPath(arcData.getObjectById(process?.executesLabProtocol["@id"]).name)} />
-            {:else}
-              {arcData.getObjectById(process?.executesLabProtocol["@id"]).name}
-          
-            {/if} -->
+            <ArcResourceView sample={process.protocol}/>
           </div>
 
           <!-- Column 4 -->
           <div class="flex items-center justify-center">
-            {process.sample}
-            <!-- {#if isPictureType(arcData.getObjectById(process.result["@id"]).name)}
-              <PictureView
-                url="https://git.nfdi4plants.org/api/v4/projects/{arcData.arc?.id}/repository/files/{encodeURIComponent(getCleanPath(arcData.getObjectById(process.result['@id']).name))}/raw?lfs=true"
-                title={arcData.getObjectById(process?.object["@id"]).name}
-              />
-            {:else}
-              <button
-                class="cursor-pointer text-info hover:text-info-content"
-                onclick={() => {
-                  modalProcess = process;
-                  modalSource = arcData.getObjectById(process?.result["@id"]);
-                  showModal();
-                }}
-              >
-                {arcData.getObjectById(process.result["@id"]).name}
-              </button>
-            {/if} -->
+            <ArcResourceView sample={process.sample}/>
           </div>
         {/each}
       </div>
-
-      <!-- <div class="bg-base-200">
-        <table class="table table-pin-rows">
-          <thead>
-            <tr class="bg-base-300">
-              <th class="w-1"></th>
-              <th>Source</th>
-              <th>Protocol</th>
-              <th>Sample</th>
-            </tr>
-          </thead>
-          <tbody>
-            {#each paginatedEntries as process, i}
-              <tr>
-                <td>{i + 1 + currentPage * maxEntries}</td>
-                <td>
-                  <button
-                    class="cursor-pointer text-info hover:text-info-content"
-                    onclick={() => {
-                      modalProcess = process;
-                      modalSource = arcData.getObjectById(process?.object["@id"]);
-                      console.log(modalSource);
-                      showModal();
-                    }}
-                  >
-                    {arcData.getObjectById(process?.object["@id"]).name}
-                  </button>
-                </td>
-                <td>{arcData.getObjectById(process?.executesLabProtocol["@id"]).name}</td>
-
-                <td class="w-fit flex items-center justify-center">
-                  {#if isPictureType(arcData.getObjectById(process.result["@id"]).name)}
-                    <PictureView url="https://git.nfdi4plants.org/api/v4/projects/{arcData.arc?.id}/repository/files/{encodeURIComponent(getPictureUrlPath(arcData.getObjectById(process.result['@id']).name))}/raw?lfs=true" />
-                  {:else}
-                    <button
-                      class="cursor-pointer text-info hover:text-info-content"
-                      onclick={() => {
-                        modalProcess = process;
-                        modalSource = arcData.getObjectById(process?.result["@id"]);
-                        showModal();
-                      }}
-                    >
-                      {arcData.getObjectById(process.result["@id"]).name}
-                    </button>
-                  {/if}
-                </td>
-              </tr>
-            {/each}
-          </tbody>
-        </table>
-      </div> -->
     {/snippet}
   </Pagination>
 </div>

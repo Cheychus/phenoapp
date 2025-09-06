@@ -15,20 +15,19 @@
   });
 
   // if user changes the auto download checkbox this effect will trigger
-  $effect(() => {
-    if (downloadImage) {
-      fetchImage();
-    }
-  });
+  // bug because it will be triggered from button and effect so 2x download
+  // $effect(() => {
+  //   if (downloadImage) {
+  //     fetchImage();
+  //   }
+  // });
 
   async function fetchImage() {
     downloadImage = true;
+    console.log("my url", url);
     const response = await fetch(`/?target=${encodeURIComponent(url)}`);
     const blob = await response.blob();
     imageUrl = URL.createObjectURL(blob);
-    // console.log(response);
-    // console.log(blob);
-    // console.log(imageUrl);
     loaded = true;
   }
 

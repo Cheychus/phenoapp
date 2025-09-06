@@ -1,3 +1,5 @@
+import type { ArcResourceType } from "$lib/types/types";
+
 export function isPictureType(filename: string): boolean {
     let extension = filename.split('.').pop();
 
@@ -10,10 +12,24 @@ export function isPictureType(filename: string): boolean {
     }
 }
 
+export function getResourceType(filename: string): ArcResourceType {
+    let extension = filename.split('.').pop();
+    switch (extension) {
+        case 'jpg':
+        case 'jpeg':
+        case 'png':
+            return "image";
+        case 'md': 
+            return "markdown";
+        default: 
+            return "other";
+    }
+}
+
 export function getCleanPath(filename: string) {
     const splitPath: string[] = filename.split('/');
     const dotIndex = splitPath.lastIndexOf('.');
-    if(dotIndex === -1){
+    if (dotIndex === -1) {
         return splitPath.join('/');
     }
 
@@ -25,6 +41,6 @@ export function isMarkdownType(filename: string): boolean {
     return filename.split('.').pop() === "md";
 }
 
-export function getMarkdownName(filepath: string){
+export function getMarkdownName(filepath: string) {
     return filepath.split('/').pop();
 }

@@ -33,3 +33,11 @@ export interface Graph {
 export interface GraphNode {
     identifier: string;
 }
+
+export type ArcResourceType = "image" | "markdown" | "other"; 
+export interface ArcResource { 
+    type: ArcResourceType;
+    rawPath: string;
+    normalizedPath: string;
+    url?: string;
+}

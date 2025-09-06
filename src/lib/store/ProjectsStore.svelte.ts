@@ -34,14 +34,7 @@ class ProjectStore {
     markdowns = $state(new Map());
 
     async fetchMarkdownFile(path: string) {
-        // const markdown = this.markdowns.get(path);
-        // if(markdown){
-        //     console.log("markdown found")
-        //     return markdown;
-        // }
-
-        const id = arcData.arc?.id;
-        const response = await fetch(`https://git.nfdi4plants.org/api/v4/projects/${id}/repository/files/${encodeURIComponent(path)}/raw`)
+        const response = await fetch(path)
         const data = await response.text();
         this.markdowns.set(path, data);
         return data;

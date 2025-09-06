@@ -6,16 +6,17 @@
 	import { userSettings } from "$lib/store/UserSettings.svelte.js";
 	import { db } from "$lib/store/Database.svelte";
 	import { onMount } from "svelte";
-	import type { Arc } from "$lib/store/Database.svelte";
+	
 
 	let { children } = $props();
-	let arcs = $state<Arc[]>([]);
 
 	onMount(async () => {
 		await db.init();
-		arcs = await db.instance.getArcs();
+		let arcs = await db.instance.getArcs();
 		userSettings.arcs = arcs;
 		userSettings.init();
+
+		
 	});
 
 </script>
