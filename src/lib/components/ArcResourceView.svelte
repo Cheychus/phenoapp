@@ -25,7 +25,12 @@
 {/if}
 
 {#if resource.type === "markdown"}
-    <MarkdownView url={resource.url} />
+    <MarkdownView url={resource.url} name={sample.name} />
+{/if}
+
+{#if resource.type === "csv"}
+    CSV
+    {sample.name}
 {/if}
 
 {#if resource.type === "other"}

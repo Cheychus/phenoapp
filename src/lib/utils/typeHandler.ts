@@ -21,6 +21,8 @@ export function getResourceType(filename: string): ArcResourceType {
             return "image";
         case 'md': 
             return "markdown";
+        case 'csv':
+            return "csv";
         default: 
             return "other";
     }

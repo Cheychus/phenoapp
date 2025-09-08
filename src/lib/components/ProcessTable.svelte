@@ -80,7 +80,7 @@
   <!-- <p>Study or Assay: <strong>{identifier}</strong> loaded!</p> -->
 {/if}
 
-<CsvView />
+<!-- <CsvView /> -->
 
 <div class="flex flex-col justify-end p-2 shadow-sm">
   <div class="dropdown">

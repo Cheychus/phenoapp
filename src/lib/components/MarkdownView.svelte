@@ -4,14 +4,14 @@
   import { onMount } from "svelte";
 
 
-  let { url } = $props();
+  let { url, name } = $props();
   let markdown: string = $state("");
 
   // console.log(url);
  
   onMount(async () => {
     // markdown = await projectStore.fetchMarkdownFile(url);
-    let response = await  fetch('/testMarkdown.md');
+    let response = await  fetch(url);
     let result = await response.text();
     markdown = result;
     // console.log(result);
@@ -35,7 +35,7 @@
 <!-- Open the modal using ID.showModal() method -->
 <dialog  bind:this={markdownModal} id="markdownModal" class="modal">
   <div class="modal-box min-w-2/3">
-    <h3 class="text-lg font-bold">Protocol Name: Imaging.md</h3>
+    <h3 class="text-lg font-bold">Protocol Name: {name}</h3>
     <div use:attachShadow>
   {@html marked.parse(markdown)}
 </div>
@@ -54,7 +54,7 @@
     />
   </svg>
 
-  Open Markdown
+  Open Markdown ({name})
 </button>
 
 
