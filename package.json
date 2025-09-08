@@ -25,6 +25,7 @@
 	},
 	"dependencies": {
 		"dataframe-js": "^1.4.4",
-		"marked": "^16.2.1"
+		"marked": "^16.2.1",
+		"plotly.js-dist": "^3.1.0"
 	}
 }
