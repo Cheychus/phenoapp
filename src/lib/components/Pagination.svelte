@@ -3,7 +3,7 @@
 
   let currentPage = $state(0);
   let maxEntries = $state(10);
-  let maxPages = $derived(Math.ceil(data.length / maxEntries));
+  let maxPages = $derived(Math.ceil(data.length / maxEntries) - 1);
   let startIndex = $derived(currentPage * maxEntries);
   let paginatedEntries = $derived(data.slice(startIndex, startIndex + maxEntries));
 </script>

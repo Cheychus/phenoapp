@@ -6,6 +6,7 @@
     --font-oswald: 'Oswald', sans-serif;
     --spacing-10p: 10%;
     --spacing-layout: 15%;
+    --screen-layout: 'calc(100vh - 80px)';
 }
 
 
