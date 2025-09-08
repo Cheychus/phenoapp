@@ -1,18 +1,60 @@
 <script lang="ts">
   import { projectStore } from "$lib/store/ProjectsStore.svelte";
+  import { marked } from "marked";
   import { onMount } from "svelte";
 
+
   let { url } = $props();
-  let markdown = $state();
+  let markdown: string = $state("");
 
   // console.log(url);
-
+ 
   onMount(async () => {
-        const response = await fetch(url)
-        const data = await response.text();
-        markdown = data;
-    
+    // markdown = await projectStore.fetchMarkdownFile(url);
+    let response = await  fetch('/testMarkdown.md');
+    let result = await response.text();
+    markdown = result;
+    // console.log(result);
+
   });
+
+  function attachShadow(node) {
+    if (!node.shadowRoot) {
+      const shadow = node.attachShadow({ mode: "open" });
+      while (node.firstChild) {
+        shadow.appendChild(node.firstChild);
+      }
+    }
+  }
+
+
+  let markdownModal;
+
 </script>
 
-{markdown}
+<!-- Open the modal using ID.showModal() method -->
+<dialog  bind:this={markdownModal} id="markdownModal" class="modal">
+  <div class="modal-box min-w-2/3">
+    <h3 class="text-lg font-bold">Protocol Name: Imaging.md</h3>
+    <div use:attachShadow>
+  {@html marked.parse(markdown)}
+</div>
+  </div>
+  <form method="dialog" class="modal-backdrop">
+    <button>close</button>
+  </form>
+</dialog>
+
+<button class="btn" onclick={() => markdownModal.showModal()}>
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+    <path
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"
+    />
+  </svg>
+
+  Open Markdown
+</button>
+
+

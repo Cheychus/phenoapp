@@ -9,6 +9,7 @@
   import type { Assay, GraphNode } from "$lib/types/types";
     import SampleView from "./ArcResourceView.svelte";
     import ArcResourceView from "./ArcResourceView.svelte";
+  import CsvView from "./CsvView.svelte";
 
   let { identifier, type } = $props();
 
@@ -17,12 +18,11 @@
   // console.log(processData);
   let processes = $state<any[]>([]);
   let tableObjects: any[] = [];
-  if (processData){
+  if (processData) {
     const about = processData.about ?? [];
-    // console.log(about, "about");
+    // console.log(about);
     processes = about.map((e) => arcData.getObjectById(e["@id"]));
     // console.log(processes, "processes");
-
 
     processes.forEach((process) => {
       const object = process.object ?? null;
@@ -38,15 +38,13 @@
         source,
         protocol,
         sample,
-      }
+      };
       tableObjects.push(tableObj);
     });
 
 //     console.log(tableObjects);
 
   }
-  
-
 
   // let processes = $derived(processData?.about ? processData.about.map((e) => arcData.getObjectById(e["@id"])) : []);
   let modalProcess = $state();
@@ -81,6 +79,8 @@
 {:else}
   <!-- <p>Study or Assay: <strong>{identifier}</strong> loaded!</p> -->
 {/if}
+
+<CsvView />
 
 <div class="flex flex-col justify-end p-2 shadow-sm">
   <div class="dropdown">
