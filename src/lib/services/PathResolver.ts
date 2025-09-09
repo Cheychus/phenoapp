@@ -22,14 +22,7 @@ export class PathResolver {
     }
 
     getName(path: string): string {
-        let name = "";
-        const lastPartFromPath = this.normalize(path).split('/').pop();
-        if(lastPartFromPath?.includes('#')){
-            // remove fragment selectors for name
-            name = lastPartFromPath.split('#').pop();
-        }
-
-        return name;
+        return this.normalize(path).split('/').pop() || "undefined";
     }
 
 

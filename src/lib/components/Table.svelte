@@ -20,7 +20,7 @@
       const path = arcObject?.name;
       const resourceType: ArcResourceType = getResourceType(path);
       const res = resourceStore.addResource(path, resourceType);
-      // console.log(res, " added");
+       console.log(res, " added");
       dataFiles.push(res);
     })
   
