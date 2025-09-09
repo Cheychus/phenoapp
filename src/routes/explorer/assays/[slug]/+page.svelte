@@ -4,6 +4,8 @@
 
     let { data }: PageProps = $props();
 
+    console.log(data.slug);
+
 </script>
 
 

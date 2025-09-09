@@ -21,11 +21,23 @@ export class PathResolver {
         return this.baseUrl + '/' + encodeURIComponent(clean);
     }
 
+    getName(path: string): string {
+        let name = "";
+        const lastPartFromPath = this.normalize(path).split('/').pop();
+        if(lastPartFromPath?.includes('#')){
+            // remove fragment selectors for name
+            name = lastPartFromPath.split('#').pop();
+        }
+
+        return name;
+    }
 
 
-    makeResource(path: string, type: ArcResourceType): ArcResource {
+
+makeResource(path: string, type: ArcResourceType): ArcResource {
         return {
             type,
+            name: this.getName(path),
             rawPath: path,
             normalizedPath: this.normalize(path),
             url: this.toUrl(path) + resourceStore.getApiExtensions(type),

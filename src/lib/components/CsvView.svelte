@@ -10,6 +10,8 @@
   let filteredHeaders = $state([]);
   let data = $state([]);
 
+  let {csvUrl} = $props();
+
   onMount(async () => {
     console.log("init --> csv Viewer");
     let parts = input.split("#");
@@ -25,7 +27,7 @@
     }
     let apiUrl = `https://git.nfdi4plants.org/api/v4/projects/2928/repository/files/${encodeURIComponent(url)}/raw?lfs=true`;
 
-    let response = await fetch(apiUrl);
+    let response = await fetch(csvUrl);
     let result = await response.text();
     csv = result;
 

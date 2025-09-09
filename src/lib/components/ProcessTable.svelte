@@ -32,6 +32,7 @@
       const protocol = executesLabProtocol?.["@id"] ? arcData.getObjectById(executesLabProtocol["@id"]) : null;
 
       const result = process.result ?? null;
+      // console.log(process);
       const sample = object?.["@id"] ? arcData.getObjectById(result["@id"]) : null;
 
       const tableObj = {
@@ -110,7 +111,7 @@
         <div class="p-3 bg-base-200 font-semibold border-b border-secondary">Protocol</div>
         <div class="flex justify-center p-3 bg-base-200 font-semibold border-b border-secondary">Sample</div>
 
-        {#each paginatedEntries as process, i}
+        {#each paginatedEntries as process, i (currentPage * maxEntries + i)}
           <!-- Column 1 -->
           <div class="flex justify-center min-h-16 items-center">{i + 1 + currentPage * maxEntries}</div>
 
@@ -124,18 +125,18 @@
                 showModal();
               }}
             >
-               <ArcResourceView sample={process.source}/>
+               <ArcResourceView process={process.source}/>
             </button>
           </div>
 
           <!-- Column 3 -->
           <div class="flex items-center gap-2">
-            <ArcResourceView sample={process.protocol}/>
+            <ArcResourceView process={process.protocol}/>
           </div>
 
           <!-- Column 4 -->
           <div class="flex items-center justify-center">
-            <ArcResourceView sample={process.sample}/>
+            <ArcResourceView process={process.sample}/>
           </div>
         {/each}
       </div>

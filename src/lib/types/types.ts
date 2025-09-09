@@ -23,6 +23,7 @@ export interface Organization {
 }
 
 export interface Assay {
+    identifier: string,
     about?: Array<any>
 }
 
@@ -35,8 +36,10 @@ export interface GraphNode {
 }
 
 export type ArcResourceType = "image" | "markdown" | "csv" | "other"; 
+
 export interface ArcResource { 
     type: ArcResourceType;
+    name: string;
     rawPath: string;
     normalizedPath: string;
     url?: string;

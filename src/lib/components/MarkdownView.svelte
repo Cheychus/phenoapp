@@ -1,21 +1,17 @@
 <script lang="ts">
   import { projectStore } from "$lib/store/ProjectsStore.svelte";
+  import { resourceStore } from "$lib/store/ResourceStore.svelte";
   import { marked } from "marked";
   import { onMount } from "svelte";
 
 
-  let { url, name } = $props();
+  let { resource, url, name } = $props();
   let markdown: string = $state("");
 
   // console.log(url);
  
   onMount(async () => {
-    // markdown = await projectStore.fetchMarkdownFile(url);
-    let response = await  fetch(url);
-    let result = await response.text();
-    markdown = result;
-    // console.log(result);
-
+      markdown = await resourceStore.fetchData(resource);
   });
 
   function attachShadow(node) {
@@ -54,7 +50,7 @@
     />
   </svg>
 
-  Open Markdown ({name})
+  Open Markdown
 </button>
 
 

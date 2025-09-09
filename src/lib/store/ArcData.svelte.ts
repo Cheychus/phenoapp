@@ -21,7 +21,7 @@ class ArcData {
 
     init(arc: Arc) {
         console.log("init arc -->", arc.id);
-        resourceStore.init(Number(arc.id));
+       // resourceStore.init(Number(arc.id));
         this.arc = arc;
         this.graph = arc.content['@graph'];
 

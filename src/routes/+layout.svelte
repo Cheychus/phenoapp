@@ -6,6 +6,7 @@
 	import { userSettings } from "$lib/store/UserSettings.svelte.js";
 	import { db } from "$lib/store/Database.svelte";
 	import { onMount } from "svelte";
+  import { resourceStore, ResourceStore } from "$lib/store/ResourceStore.svelte";
 	
 
 	let { children } = $props();
@@ -15,8 +16,8 @@
 		let arcs = await db.instance.getArcs();
 		userSettings.arcs = arcs;
 		userSettings.init();
+		resourceStore.init(Number(userSettings.selectedArcId));
 
-		
 	});
 
 </script>

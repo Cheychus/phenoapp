@@ -4,6 +4,7 @@ import { arcData } from "./ArcData.svelte";
 class ProjectStore {
     projects = $state<Project[]>([]);
     downloadProjects = $state<boolean>(true);
+    initFlag = false;
 
     baseUrl ="https://git.nfdi4plants.org/";
     apiUrl = "https://git.nfdi4plants.org/api/v4/";
@@ -14,6 +15,11 @@ class ProjectStore {
      * push them into a projects array. This will persist the data until the setup page is reloaded.
      */
     async init() {
+        if(this.initFlag){
+            console.log('projectStore already initialised...');
+            return;
+        }
+        this.initFlag = true;
         let page = 1;
         while(this.downloadProjects) {
             const projectUrl = `https://git.nfdi4plants.org/api/v4/projects/?per_page=20&page=${page}`
@@ -28,21 +34,6 @@ class ProjectStore {
             }
         }
     }
-
-    // url="https://git.nfdi4plants.org/api/v4/projects/{arcData.arc?.id}/repository/files/{encodeURIComponent(getPictureUrlPath(arcData.getObjectById(process.result['@id']).name))}/raw?lfs=true"
-
-    markdowns = $state(new Map());
-
-    async fetchMarkdownFile(path: string) {
-        const response = await fetch(path)
-        const data = await response.text();
-        this.markdowns.set(path, data);
-        return data;
-    }
-
-
-
-
 }
 
 export const projectStore = new ProjectStore();
