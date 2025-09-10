@@ -6,7 +6,7 @@ import { resourceStore } from "./ResourceStore.svelte";
 class ArcData {
     arc = $state<Arc>();
     context = [];
-    graph = [];
+    graph = $state([]);
     studyData = [];
     assayData: Assay[] = [];
 

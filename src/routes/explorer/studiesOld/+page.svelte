@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Table from "$lib/components/Table.svelte";
+    import Table from "$lib/components/explorer/Table.svelte";
     import { arcData } from "$lib/store/ArcData.svelte";
 </script>
 

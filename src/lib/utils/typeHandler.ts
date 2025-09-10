@@ -32,6 +32,8 @@ export function getResourceType(filename: string): ArcResourceType {
     if(extension.includes("csv")){
         return "csv";
     }
+
+    return "other";
 }
 
 export function getCleanPath(filename: string) {
