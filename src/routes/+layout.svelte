@@ -8,6 +8,7 @@
 	import { onMount } from "svelte";
   import { resourceStore, ResourceStore } from "$lib/store/ResourceStore.svelte";
     import { errorStore } from "$lib/store/ErrorStore.svelte";
+  import { arcData } from "$lib/store/ArcData.svelte";
 	
 
 	let { children } = $props();

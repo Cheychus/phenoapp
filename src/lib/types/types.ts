@@ -24,7 +24,8 @@ export interface Organization {
 
 export interface Assay {
     identifier: string,
-    about?: Array<any>
+    about?: Array<any>,
+    hasPart?: Array<any>,
 }
 
 export interface Graph {
@@ -35,7 +36,7 @@ export interface GraphNode {
     identifier: string;
 }
 
-export type ArcResourceType = "image" | "markdown" | "csv" | "other"; 
+export type ArcResourceType = "image" | "markdown" | "csv" | "tsv" | "other"; 
 
 export interface ArcResource { 
     type: ArcResourceType;

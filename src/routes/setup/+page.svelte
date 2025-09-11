@@ -6,21 +6,11 @@
     import Loader from "$lib/components/Loader.svelte";
     import {projectStore} from "$lib/store/ProjectsStore.svelte";
 
-   //  let projects: JSON[] = $state([]);
-   //  let download = $state(true);
-
     onMount(async () => {
         // get all projects from api
         await projectStore.init();
     });
 
-    async function fetchProjects(url: string) {
-        const res = await fetch(`/?target=${encodeURIComponent(url)}`);
-        return await res.json();
-    }
-
-    //  $inspect(userSettings.selectedArcId);
-    // $inspect(userSettings.arcs, "arcs");
 </script>
 
 <section class="mx-layout flex flex-col gap-2">

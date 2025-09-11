@@ -21,10 +21,10 @@ export class ResourceStore {
     this.resolver = new PathResolver(this.baseUrl);
   }
 
-  addResource(path: string, type: ArcResourceType): ArcResource {
+  addResource(path: string): ArcResource {
     let res = this.resources.find((res) => res.rawPath === path);
     if (!res) {
-      res = this.resolver.makeResource(path, type);
+      res = this.resolver.makeResource(path);
       this.resources.push(res);
     }
     return res;
@@ -78,7 +78,10 @@ export class ResourceStore {
           data = await response.json();
         } else if (contentType.includes("text/plain")) {
           data = await response.text();
-        } else {
+        } else if (contentType.includes("binary")){
+          data = await response.text();
+        }
+        else {
           throw new Error(`unsupported Content Type: ${contentType}`);
         }
         this.data.set(resource.rawPath, data);
@@ -99,6 +102,7 @@ export class ResourceStore {
     switch (type) {
       case "image":
       case "csv":
+      case "tsv":
         return "/raw?lfs=true";
       case "markdown":
         return "/raw";

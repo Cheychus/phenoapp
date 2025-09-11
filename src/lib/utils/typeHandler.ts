@@ -26,6 +26,8 @@ export function getResourceType(filename: string): ArcResourceType {
             return "markdown";
         case 'csv':
             return "csv";
+        case 'tsv':
+            return "tsv";
     }
 
     if(!extension){
