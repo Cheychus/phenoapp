@@ -1,7 +1,5 @@
 import type { Arc } from "./Database.svelte";
 import type {Assay, Organization, Person} from "$lib/types/types";
-import { PathResolver } from "$lib/services/PathResolver";
-import { resourceStore } from "./ResourceStore.svelte";
 
 class ArcData {
     arc = $state<Arc>();
@@ -41,25 +39,6 @@ class ArcData {
         this.persons = this.graph.filter((el) => el["@type"] === "Person");
 
     
-    }
-
-    // url="https://git.nfdi4plants.org/api/v4/projects/{arcData.arc?.id}/repository/files/{encodeURIComponent(getPictureUrlPath(arcData.getObjectById(process.result['@id']).name))}/raw?lfs=true"
-
-    markdowns = $state(new Map());
-
-    async fetchMarkdownFile(path: string) {
-        const markdown = this.markdowns.get(path);
-        if(markdown){
-            console.log("markdown found")
-            return markdown;
-        }
-
-        const id = arcData.arc?.id;
-        const response = await fetch(`https://git.nfdi4plants.org/api/v4/projects/${id}/repository/files/${encodeURIComponent(path)}/raw`)
-        const data = await response.text();
-        this.markdowns.set(path, data);
-        console.log(this.markdowns);
-        return data;
     }
 
 }

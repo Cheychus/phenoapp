@@ -1,6 +1,10 @@
 class ErrorStore {
     errors: string[] = $state([]);
 
+    constructor(){
+        this.errors = []; // clear error store 
+    }
+
     add(error: string){
         this.errors.push(error);
     }

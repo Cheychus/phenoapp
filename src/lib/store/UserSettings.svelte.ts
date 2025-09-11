@@ -2,6 +2,7 @@ import { browser } from '$app/environment';
 import type { Arc } from './Database.svelte';
 import { db } from './Database.svelte';
 import { arcData } from './ArcData.svelte';
+import { resourceStore } from './ResourceStore.svelte';
 
 class UserSettings {
 
@@ -66,6 +67,7 @@ class UserSettings {
         if (arc) {
             this.selectedArc = arc;
             arcData.init(arc);
+            resourceStore.init(Number(arc.id)); 
         } else {
             console.error(`No arc with id: ${this.selectedArcId} found!`);
         }

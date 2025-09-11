@@ -6,6 +6,11 @@
   let maxPages = $derived(Math.ceil(data.length / maxEntries) - 1);
   let startIndex = $derived(currentPage * maxEntries);
   let paginatedEntries = $derived(data.slice(startIndex, startIndex + maxEntries));
+
+  function setMaxEntries(entries: number){
+    maxEntries = entries;
+    currentPage = 0;
+  }
 </script>
 
 <div class="w-full flex flex-col">
@@ -14,10 +19,10 @@
     <p class="mr-auto">Current Page: {currentPage}</p>
     <div class="flex gap-2">
       Max Entrys:
-      <button onclick={() => (maxEntries = 10)} class="text-info hover:text-info-content" class:underline={maxEntries === 10}> 10 </button>
-      <button onclick={() => (maxEntries = 50)} class="text-info hover:text-info-content" class:underline={maxEntries === 50 ? "underline" : ""}> 50 </button>
-      <button onclick={() => (maxEntries = 100)} class="text-info hover:text-info-content" class:underline={maxEntries === 100 ? "underline" : ""}> 100 </button>
-      <button onclick={() => (maxEntries = data.length)} class="text-info hover:text-info-content" class:underline={maxEntries === data.length ? "underline" : ""}> All </button>
+      <button onclick={() => setMaxEntries(10)} class="text-info hover:text-info-content" class:underline={maxEntries === 10}> 10 </button>
+      <button onclick={() => setMaxEntries(50)} class="text-info hover:text-info-content" class:underline={maxEntries === 50 ? "underline" : ""}> 50 </button>
+      <button onclick={() => setMaxEntries(100)} class="text-info hover:text-info-content" class:underline={maxEntries === 100 ? "underline" : ""}> 100 </button>
+      <button onclick={() => setMaxEntries(data.length)} class="text-info hover:text-info-content" class:underline={maxEntries === data.length ? "underline" : ""}> All </button>
     </div>
   </div>
 

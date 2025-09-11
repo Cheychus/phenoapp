@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { PageProps } from "./$types";
-    import ProcessTable from "$lib/components/ProcessTable.svelte";
+    import ProcessTable from "$lib/components/explorer/ProcessTable.svelte";
 
     let { data }: PageProps = $props();
 

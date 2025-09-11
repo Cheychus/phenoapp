@@ -13,6 +13,9 @@ export function isPictureType(filename: string): boolean {
 }
 
 export function getResourceType(filename: string): ArcResourceType {
+    if(!filename.includes('.')){
+        return "other";
+    }
     let extension = filename.split('.').pop();
     switch (extension) {
         case 'jpg':

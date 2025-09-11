@@ -12,6 +12,10 @@
  
   onMount(async () => {
       markdown = await resourceStore.fetchData(resource);
+
+      if(!markdown){
+        markdown = "Could not fetch markdown file";
+      }
   });
 
   function attachShadow(node) {
@@ -50,7 +54,7 @@
     />
   </svg>
 
-  Open Markdown
+{resource.name}
 </button>
 
 

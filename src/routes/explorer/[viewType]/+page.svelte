@@ -18,9 +18,9 @@
     {#if !userSettings.selectedArc}
         <p>You need to select an Arc first!</p>
     {:else if viewType === "assays"}
-        <Experiments experiments={assays}/>
+        <Experiments experiments={assays} {viewType}/>
     {:else if viewType === "studies"}
-        <Experiments experiments={studies}/>
+        <Experiments experiments={studies} {viewType}/>
     {:else}
        <Overview />
     {/if}

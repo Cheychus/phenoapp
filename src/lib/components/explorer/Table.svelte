@@ -4,21 +4,16 @@
     import { errorStore } from "$lib/store/ErrorStore.svelte";
   import { resourceStore } from "$lib/store/ResourceStore.svelte";
   import type { ArcResource, ArcResourceType } from "$lib/types/types";
+  import { toArray } from "$lib/utils/helpers";
   import { getResourceType } from "$lib/utils/typeHandler";
   import { onMount } from "svelte";
 
-  let { tableData, tableType, url } = $props();
+  let { tableData, tableType } = $props();
 
   // console.log(tableData);
 
   const dataFiles = extractDataFiles();
 
-  function toArray(input: any[]): any[] {
-    if (!input) {
-      return [];
-    }
-    return Array.isArray(input) ? input : [input];
-  }
 
   function extractDataFiles(): ArcResource[] {
     try {
@@ -92,7 +87,7 @@
               {#if header === "about"}
                 <a
                   class="btn btn-accent px-16"
-                  href={`${url}/${tableData.identifier}`}>Open Processes</a
+                  href={`/explorer/${tableType}/${tableData.identifier}`}>Open Processes</a
                 >
               {:else if header === "hasPart"}
                 {dataFiles.length} Datafiles found.

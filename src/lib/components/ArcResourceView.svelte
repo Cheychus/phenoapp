@@ -21,16 +21,17 @@
 
     // This component will take in a sample and try to display it in different ways depending on the type
     let resource = $state<ArcResource>();
+    let name = $state(process.name);
     onMount(() => {
-        console.log(process, "arc resource view process");
-
+        if(!process.name){
+            name = "undefined";
+        }else{
         const resourceType: ArcResourceType = getResourceType(process.name);
-
         if (resourceType !== "other") {
             resource = resourceStore.addResource(process.name, resourceType);
         }
 
-        console.log(resource, "resource");
+        }
     });
 </script>
 
@@ -47,5 +48,5 @@
         <a href="{currentPath}/{resource.name}" class="text-info">CSV Table</a>
     {/if}
 {:else}
-    {process.name}
+    {name}
 {/if}

@@ -3,7 +3,7 @@
     import { onMount } from "svelte";
     import Table from "./Table.svelte";
 
-    let { experiments } = $props();
+    let { experiments, viewType } = $props();
     let selectedExperiment: string = $state(experiments.at(0)?.identifier || "");
   
     let tableData = $derived.by(() =>
@@ -28,6 +28,6 @@
     </select>
     <div class="col-span-2 divider divider-primary m-0"></div>
         {#key selectedExperiment}
-            <Table {tableData} tableType="assay" url="/explorer/assays" />
+            <Table {tableData} tableType={viewType} />
         {/key}
 </section>
