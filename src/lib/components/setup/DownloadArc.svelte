@@ -2,6 +2,7 @@
   import { userSettings } from "$lib/store/UserSettings.svelte";
   import { showToast } from "$lib/utils/toast";
   import Loader from "$lib/components/Loader.svelte";
+    import { arcData } from "$lib/store/ArcData.svelte";
 
   let {
     baseUrl,

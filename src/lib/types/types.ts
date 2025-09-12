@@ -36,12 +36,20 @@ export interface GraphNode {
     identifier: string;
 }
 
-export type ArcResourceType = "image" | "markdown" | "csv" | "tsv" | "other"; 
+export type ArcResourceType = "image" | "markdown" | "csv" | "tsv" | "other";
 
-export interface ArcResource { 
+export interface ArcResource {
     type: ArcResourceType;
     name: string;
     rawPath: string;
     normalizedPath: string;
     url?: string;
+}
+
+
+export interface Comment {
+    ['@id']?: string,
+    ['@type']?: string,
+    name?: string,
+    text?: string,
 }

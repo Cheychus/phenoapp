@@ -19,7 +19,7 @@ class ArcData {
   assayData: Assay[] = $state([]);
   assayProcesses = $state(new SvelteMap<string, any[]>());
   assayDatafiles = $state(new SvelteMap<string, any[]>());
-  investigationData = [];
+  investigationData = $state([]);
 
   organizations: Organization[] = $state([]);
   persons: Person[] = $state([]);
@@ -29,14 +29,20 @@ class ArcData {
     return this.graphMap.get(id);
   }
 
+
   init(arc: Arc) {
     console.log("init arc -->", arc.id);
     resourceStore.init(Number(arc.id));
     this.arc = arc;
     this.graph = arc.content["@graph"];
 
+    if(!this.graph){
+      console.error('no graph');
+      return;
+    }
+
     console.log('init graph Map...');
-    this.graph.forEach(node => {
+    this.graph?.forEach(node => {
       const key = node["@id"];
       const value = node;
       this.graphMap.set(key, value);
@@ -55,6 +61,8 @@ class ArcData {
     this.investigationData = this.graph.filter((el) => {
       return el["@type"] === "Dataset" && el["additionalType"] === "Investigation";
     });
+
+    console.log(this.investigationData);
 
 
 
@@ -89,6 +97,8 @@ class ArcData {
       }
       this.assayDatafiles.set(assay.identifier, this.extractDataFiles(assay.hasPart));
     }
+
+    
   }
 
   extractDataFiles(hasPart: any): ArcResource[] {
@@ -115,4 +125,9 @@ class ArcData {
 
 }
 
-export const arcData = new ArcData();
+export let arcData = new ArcData();
+
+export function resetArcData() {
+  console.log("arc data was reset...");
+  arcData = new ArcData();
+}

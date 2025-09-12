@@ -1,7 +1,7 @@
 import { browser } from '$app/environment';
 import type { Arc } from './Database.svelte';
 import { db } from './Database.svelte';
-import { arcData } from './ArcData.svelte';
+import { arcData, resetArcData } from './ArcData.svelte';
 import { resourceStore } from './ResourceStore.svelte';
 
 class UserSettings {
@@ -50,9 +50,19 @@ class UserSettings {
         this.arcs = await db.instance.getArcs();
     }
 
-    async removeArc(id: string) {
+    async removeArc(id: number) {
         await db.instance.removeArc(id);
         this.arcs = await db.instance.getArcs();
+
+        console.log(this.selectedArcId, id);
+        if(Number(this.selectedArcId) === id){
+            // remove arc data from selection and reset arc state
+            console.log('reset?')
+            this.selectedArcId = "";
+            localStorage.setItem("selectedArcId", "");
+            resetArcData();
+        }
+
     }
 
     findArc(url: string): Arc | undefined {

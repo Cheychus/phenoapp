@@ -11,7 +11,8 @@
             "/overview",
             "/studies",
             "/assays",
-            "/explorer"
+            "/explorer",
+            "/setup"
     ]
 
     const isAllowed = allowedPaths.some((end) => path.endsWith(end));

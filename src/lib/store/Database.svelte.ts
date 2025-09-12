@@ -50,7 +50,7 @@ export class Database {
 
     }
 
-    async removeArc(id: string): Promise<void> {
+    async removeArc(id: number): Promise<void> {
         return new Promise((resolve, reject) => {
             const request = this.db
                 .transaction(["arcs"], "readwrite")
