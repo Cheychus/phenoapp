@@ -7,21 +7,23 @@
 
     let assays = $derived(arcData.assayData);
     let studies = $derived(arcData.studyData);
- 
 
     let { data = { viewType: "overview" } }: PageProps = $props();
     let { viewType } = $derived(data);
-
 </script>
 
 <section class="mx-layout flex flex-col gap-2">
     {#if !userSettings.selectedArc}
         <p>You need to select an Arc first!</p>
     {:else if viewType === "assays"}
-        <Experiments experiments={assays} {viewType}/>
+        {#key assays}
+            <Experiments experiments={assays} {viewType} />
+        {/key}
     {:else if viewType === "studies"}
-        <Experiments experiments={studies} {viewType}/>
+        {#key studies}
+            <Experiments experiments={studies} {viewType} />
+        {/key}
     {:else}
-       <Overview />
+        <Overview />
     {/if}
 </section>

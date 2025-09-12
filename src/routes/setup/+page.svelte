@@ -1,10 +1,11 @@
 <script lang="ts">
-    import DownloadArc from "$lib/components/DownloadArc.svelte";
+    import DownloadArc from "$lib/components/setup/DownloadArc.svelte";
     import {goto} from "$app/navigation";
     import {userSettings} from "$lib/store/UserSettings.svelte";
     import {onMount} from "svelte";
     import Loader from "$lib/components/Loader.svelte";
     import {projectStore} from "$lib/store/ProjectsStore.svelte";
+    import ArcSelection from "$lib/components/setup/ArcSelection.svelte";
 
     onMount(async () => {
         // get all projects from api
@@ -20,24 +21,7 @@
         for exploring
     </p>
 
-    <div class="flex gap-2">
-        <select
-                bind:value={userSettings.selectedArcId}
-                onchange={() => userSettings.selectArc()}
-                class="select select-primary"
-        >
-            <option disabled value="">Select your Arcs here</option>
-            {#each userSettings.arcs as arc}
-                <option value={String(arc.id)}>{arc.name}</option>
-            {/each}
-        </select>
-
-        <button
-                class="btn btn-accent"
-                onclick={() => goto("/explorer/overview")}>Explore Arc
-        </button
-        >
-    </div>
+    <ArcSelection />
 
     <div class="font-bold text-neutral text-2xl pt-4">Arc Database</div>
     <p>Here you can choose some Arcs to download for the Arc Explorer</p>

@@ -31,11 +31,11 @@
 <div data-theme={userSettings.theme} class="font-oswald flex flex-col h-screen">
 	<Header />
 	<main class="flex-1 justify-center overflow-auto">
-		<div>
+		<!-- <div>
 			{#each errorStore.errors as error}
 				<div class="alert alert-error">{error}</div>
 			{/each}
-		</div>
+		</div> -->
 		<div class="toast toast-end"></div>
 
 		<section class="mx-layout">

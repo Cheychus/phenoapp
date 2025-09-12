@@ -1,6 +1,5 @@
 <script lang="ts">
-  import CsvView from "$lib/components/CsvView.svelte";
-  import PictureView from "$lib/components/PictureView.svelte";
+  import CsvView from "$lib/components/explorer/views/CsvView.svelte";
   import { resourceStore } from "$lib/store/ResourceStore.svelte.js";
 
   let { data } = $props();

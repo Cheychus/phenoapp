@@ -1,11 +1,22 @@
 <script lang="ts">
   import { userSettings } from "$lib/store/UserSettings.svelte";
-  import { db } from "$lib/store/Database.svelte";
   import { showToast } from "$lib/utils/toast";
-  import Loader from "./Loader.svelte";
-  import LoadType from "./Loader.svelte";
+  import Loader from "$lib/components/Loader.svelte";
 
-  let { baseUrl, url, name, avatar_url, created_at, description = "No description", http_url_to_repo, id, last_activity_at, namespace, readme_url, star_count } = $props();
+  let {
+    baseUrl,
+    url,
+    name,
+    avatar_url,
+    created_at,
+    description = "No description",
+    http_url_to_repo,
+    id,
+    last_activity_at,
+    namespace,
+    readme_url,
+    star_count,
+  } = $props();
 
   const apiUrl = `https://git.nfdi4plants.org/api/v4/projects/${id}/packages/generic/isa_arc_json/0.0.1/arc-ro-crate-metadata.json`;
   let downloaded = $state(userSettings.isArcExisting(id));
@@ -27,18 +38,16 @@
       return;
     }
 
-    //const blob = await res.blob();
-    // const text = await res.text();
     const json = await res.json();
     console.log(json, "downloaded Arc");
-    // console.log(db, "db instance");
+
     const arcObject = {
       name: name,
       id: id,
       url: url,
       content: json,
     };
-    userSettings.addArc(arcObject);
+    await userSettings.addArc(arcObject);
     downloaded = true;
     loading = false;
     showToast("success", "Successfully downloaded Arc");
@@ -72,14 +81,25 @@
   <figure class="flex flex-col justify-start items-start">
     <div class="bg-primary w-full h-10"></div>
     {#if avatar_url}
-      <img class="p-2 pl-6 mr-auto max-h-30 object-contain" src={avatar_url} alt="Project Image" />
+      <img
+        class="p-2 pl-6 mr-auto max-h-30 object-contain"
+        src={avatar_url}
+        alt="Project Image"
+      />
     {/if}
   </figure>
   <div class="card-body pt-0">
     <h2 class="card-title pt-2 text-neutral flex items-center">
       <a href="/setup/{id}" class="text-info">{name}</a>
       <div class="ml-auto flex gap-2 text-base font-normal">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 text-warning">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="size-6 text-warning"
+        >
           <path
             stroke-linecap="round"
             stroke-linejoin="round"
@@ -96,15 +116,25 @@
           {#if namespace.avatar_url}
             <div>
               {#if namespace.avatar_url.startsWith("/uploads")}
-                <img class="w-10 h-10 rounded-full" src={baseUrl + "/" + namespace.avatar_url} alt="User avatar" />
+                <img
+                  class="w-10 h-10 rounded-full"
+                  src={baseUrl + "/" + namespace.avatar_url}
+                  alt="User avatar"
+                />
               {:else}
-                <img class="w-10 h-10 rounded-full" src={namespace.avatar_url} alt="User avatar" />
+                <img
+                  class="w-10 h-10 rounded-full"
+                  src={namespace.avatar_url}
+                  alt="User avatar"
+                />
               {/if}
             </div>
           {/if}
 
           <p>
-            <a href={namespace?.web_url} class="text-info" target="_blank">{namespace?.name}</a>
+            <a href={namespace?.web_url} class="text-info" target="_blank"
+              >{namespace?.name}</a
+            >
           </p>
         </div>
       {/if}
@@ -125,17 +155,29 @@
         ({Math.round(daysBetweenNow(last_activity_at))} days ago)
       </p>
       <p>
-        created At: {new Date(created_at).toLocaleDateString("de-DE")} ({Math.round(daysBetweenNow(created_at))}
+        created At: {new Date(created_at).toLocaleDateString("de-DE")} ({Math.round(
+          daysBetweenNow(created_at),
+        )}
         days ago)
       </p>
       <div class="flex gap-2">
-        <a href={readme_url} class="btn btn-primary btn-sm" target="_blank">Open Readme</a>
-        <a href={http_url_to_repo} class="btn btn-primary btn-sm" target="_blank">Open Git Repository</a>
+        <a href={readme_url} class="btn btn-primary btn-sm" target="_blank"
+          >Open Readme</a
+        >
+        <a
+          href={http_url_to_repo}
+          class="btn btn-primary btn-sm"
+          target="_blank">Open Git Repository</a
+        >
       </div>
     </div>
     <div class="card-actions justify-end">
       {#if !downloaded}
-        <button type="button" class="btn relative flex items-center justify-center btn-accent px-12 min-w-42" onclick={() => downloadFile(name, apiUrl)}>
+        <button
+          type="button"
+          class="btn relative flex items-center justify-center btn-accent px-12 min-w-42"
+          onclick={() => downloadFile(name, apiUrl)}
+        >
           {#if loading}
             <div class="absolute left-4 flex items-center justify-center">
               <Loader />
@@ -144,7 +186,11 @@
           Download
         </button>
       {:else}
-        <button type="button" class="btn btn-secondary px-12 min-w-42" onclick={() => removeFile(id)}>Remove</button>
+        <button
+          type="button"
+          class="btn btn-secondary px-12 min-w-42"
+          onclick={() => removeFile(id)}>Remove</button
+        >
       {/if}
     </div>
   </div>

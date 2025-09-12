@@ -1,20 +1,28 @@
 <script>
     // import image from "$lib/assets/ARC-isa-cwl-decorations.png";
-    import {goto} from "$app/navigation";
+    import { goto } from "$app/navigation";
 
-    export let username = 'world';
+    export let username = "world";
 </script>
 
 <section class="mx-layout flex flex-col gap-8">
-    <div class="bg-primary rounded-lg flex ">
+    <div class="bg-primary rounded-lg flex">
         <div class="w-1/2 p-12 flex flex-col gap-8">
             <div class="font-medium text-5xl text-primary-content">
                 Explore ARC and RO Crate metadata
             </div>
-            <p class="text-primary-content italic">phenoapp makes exploring arc metadata easy with an intuitive web interface and tools for displaying data</p>
+            <p class="text-primary-content italic">
+                phenoapp makes exploring arc metadata easy with an intuitive web
+                interface and tools for displaying data
+            </p>
 
             <div class="flex w-full gap-12">
-                <button class="btn btn-lg btn-accent" onclick={() => {goto("/setup")}}>Get started</button>
+                <button
+                    class="btn btn-lg btn-accent"
+                    onclick={() => {
+                        goto("/setup");
+                    }}>Get started</button
+                >
             </div>
         </div>
 
@@ -23,18 +31,20 @@
         </div>
     </div>
 
-    <div class="p-4 bg-neutral flex flex-col gap-4 rounded-lg text-neutral-content">
-        <h1 class="text-lg">What is Arc-Ro-Crate?</h1>
+    <div
+        class="p-4 bg-neutral flex flex-col gap-4 rounded-lg text-neutral-content"
+    >
+        <h1 class="text-2xl">What are ARC's?</h1>
         <p>
-            ARC RO-Crate is ARC’s machine-optimized packaging format leveraging RO-Crate’s JSON-LD structure—bundling data and metadata into a single archive.
-            It faithfully implements ARC’s unified model of experimental (ISA) and computational (CWL) workflows via a process graph,
-            enabling seamless exchange, preservation, and reuse of research context across platforms.
+            The ARC is a framework for organizing and documenting research data,
+            as well as a container that continuously supports collaboration,
+            data exchange, and adherence to FAIR principles among various
+            researchers. The ARC can be checked for completeness and quality at
+            any time and converted into a citable data publication without
+            interrupting the research or documentation process. It is built on
+            widely accepted research data standards such as RO-Crate, ISA, and
+            abstract CWL.
         </p>
-
+        <a href="https://arc-rdm.org/" target="_blank" class="text-info link"><cite>https://arc-rdm.org/</cite></a>
     </div>
-
 </section>
-
-
-
-

@@ -1,16 +1,17 @@
 <script lang="ts">
   let { data = [], content } = $props();
 
-  let currentPage = $state(0);
-  let maxEntries = $state(10);
-  let maxPages = $derived(Math.ceil(data.length / maxEntries) - 1);
-  let startIndex = $derived(currentPage * maxEntries);
-  let paginatedEntries = $derived(data.slice(startIndex, startIndex + maxEntries));
+  let currentPage: number = $state(0);
+  let maxEntries: number = $state(10);
+  let maxPages: number = $derived(Math.ceil(data.length / maxEntries) - 1);
+  let startIndex: number = $derived(currentPage * maxEntries);
+  let paginatedEntries: any[] = $derived(data.slice(startIndex, startIndex + maxEntries));
 
   function setMaxEntries(entries: number){
     maxEntries = entries;
     currentPage = 0;
   }
+
 </script>
 
 <div class="w-full flex flex-col">

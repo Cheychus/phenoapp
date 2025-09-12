@@ -3,7 +3,8 @@
   import { onMount } from "svelte";
   import DataFrame from "dataframe-js";
   import { resourceStore } from "$lib/store/ResourceStore.svelte";
-  import Pagination from "./Pagination.svelte";
+  import Pagination from "$lib/components/Pagination.svelte";
+
 
   let csv = $state();
   let headers = $state([]);
@@ -32,6 +33,7 @@
     // console.log(Object.keys(dict));
     // console.log(df.toArray());
     // console.log(df.toCollection());
+
   });
 
   let smallTable = $state(false);
@@ -44,8 +46,9 @@
       filteredHeaders = [];
     }
   }
-</script>
 
+
+</script>
 <section class="flex flex-col overflow-hidden">
   <div class="flex flex-col gap-1 pb-4">
     <div class="collapse bg-base-100 border-base-300 border">

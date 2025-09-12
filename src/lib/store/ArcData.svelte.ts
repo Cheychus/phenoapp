@@ -10,21 +10,23 @@ class ArcData {
   arc = $state<Arc>();
   context = [];
   graph = $state([]);
+  graphMap = new Map<string, any>();
 
-  studyData = [];
+  studyData = $state([]);
   studyProcesses = $state(new SvelteMap<string, any[]>());
-  studyDatafiles = [];
+  studyDatafiles = $state(new SvelteMap<string, any[]>);
 
-  assayData: Assay[] = [];
+  assayData: Assay[] = $state([]);
   assayProcesses = $state(new SvelteMap<string, any[]>());
   assayDatafiles = $state(new SvelteMap<string, any[]>());
   investigationData = [];
 
-  organizations: Organization[] = [];
-  persons: Person[] = [];
+  organizations: Organization[] = $state([]);
+  persons: Person[] = $state([]);
 
   getObjectById(id: string) {
-    return this.graph.find((node) => node["@id"] === id);
+    // return this.graph.find((node) => node["@id"] === id);
+    return this.graphMap.get(id);
   }
 
   init(arc: Arc) {
@@ -32,6 +34,13 @@ class ArcData {
     resourceStore.init(Number(arc.id));
     this.arc = arc;
     this.graph = arc.content["@graph"];
+
+    console.log('init graph Map...');
+    this.graph.forEach(node => {
+      const key = node["@id"];
+      const value = node;
+      this.graphMap.set(key, value);
+    });
 
     // Extract Study Data
     this.studyData = this.graph.filter((el) => {
@@ -47,7 +56,7 @@ class ArcData {
       return el["@type"] === "Dataset" && el["additionalType"] === "Investigation";
     });
 
-   
+
 
     this.organizations = this.graph.filter((el) => el["@type"] === "Organization");
     this.persons = this.graph.filter((el) => el["@type"] === "Person");
@@ -55,17 +64,17 @@ class ArcData {
     // Extract Data Files and process data
     for (const study of this.studyData) {
 
-       // Extract process Data 
+      // Extract process Data 
       let processData: any = this.graph.find((e: GraphNode) => e.identifier === study.identifier);
       this.studyProcesses.set(study.identifier, processData);
 
 
-      if(!study.hasPart){
+      if (!study.hasPart) {
         console.log(`study ${study.identifier} has no datafiles`)
         continue;
       }
 
-      this.studyDatafiles = this.extractDataFiles(study);
+      this.studyDatafiles.set(study.identifier, this.extractDataFiles(study.hasPart));
     }
 
     for (const assay of this.assayData) {
@@ -93,14 +102,14 @@ class ArcData {
           continue;
         }
         const res = resourceStore.addResource(path);
-        console.log(res, " res");
+        // console.log(res, " res");
         datafiles.push(res);
       }
       return datafiles;
     } catch (error) {
-        console.error("extract Data Files failed: ", error);
-        errorStore.add("Could  not extract some data files. See console for details.");
-        return [];
+      console.error("extract Data Files failed: ", error);
+      errorStore.add("Could  not extract some data files. See console for details.");
+      return [];
     }
   }
 

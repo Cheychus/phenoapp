@@ -1,6 +1,6 @@
 <script lang="ts">
-  import CsvView from '$lib/components/CsvView.svelte';
-  import Graph from '$lib/components/Graph.svelte';
+  import CsvView from '$lib/components/explorer/views/CsvView.svelte';
+  import Graph from '$lib/components/explorer/views/Graph.svelte';
     import type { PageProps } from './$types';
 </script>
 

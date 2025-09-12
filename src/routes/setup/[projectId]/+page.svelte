@@ -1,5 +1,5 @@
 <script lang="ts">
-  import DownloadArc from '$lib/components/DownloadArc.svelte';
+  import DownloadArc from '$lib/components/setup/DownloadArc.svelte';
 	import type { PageProps } from './$types';
 
 	let { data }: PageProps = $props();
