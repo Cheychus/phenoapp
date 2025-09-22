@@ -62,7 +62,7 @@ class ArcData {
       return el["@type"] === "Dataset" && el["additionalType"] === "Investigation";
     });
 
-    console.log(this.investigationData);
+    // console.log(this.investigationData);
 
 
 

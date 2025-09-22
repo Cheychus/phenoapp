@@ -26,6 +26,7 @@ export interface Assay {
     identifier: string,
     about?: Array<any>,
     hasPart?: Array<any>,
+    variableMeasured?: Array<any>,
 }
 
 export interface Graph {
