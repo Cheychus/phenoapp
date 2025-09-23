@@ -46,6 +46,7 @@
       name: name,
       id: id,
       url: url,
+      lastActivity: new Date(last_activity_at),
       content: json,
     };
     await userSettings.addArc(arcObject);
