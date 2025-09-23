@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { this } from "$lib/store/ProjectsStore.svelte";
+  import { projectStore } from "$lib/store/ProjectsStore.svelte";
   import { resourceStore } from "$lib/store/ResourceStore.svelte";
   import { marked } from "marked";
   import { onMount } from "svelte";

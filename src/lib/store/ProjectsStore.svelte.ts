@@ -1,12 +1,19 @@
 import { browser } from "$app/environment";
 import type {Project} from "$lib/types/types";
+import { Tween } from "svelte/motion";
+import { cubicOut } from "svelte/easing";
 
 class ProjectStore {
     private perPage = 20;
     private page = 1;
-    private projectUrl = `https://git.nfdi4plants.org/api/v4/projects/?per_page=${this.perPage}&page=${this.page}`
+    private projectUrl = `https://git.nfdi4plants.org/api/v4/projects/`;
 
     public projects = $state<Project[]>([]);
+    public projectsCount = new Tween(0, {
+        duration: 2000,
+        easing: cubicOut,
+    });
+    // $derived(this.projects.length);
     private downloadProjects = $state<boolean>(true);
 
     private constructor(){}
@@ -34,11 +41,19 @@ class ProjectStore {
         console.log("projectStore --> init()");
         // Download all projects from api
         while(this.downloadProjects) {
-            const result = await fetch(`/?target=${encodeURIComponent(this.projectUrl)}`);
-            const data: Project[] = await result.json();
+            const apiUrl = `${this.projectUrl}?per_page=${this.perPage}&page=${this.page}`;
+            const result = await fetch(`/?target=${encodeURIComponent(apiUrl)}`);
+            const response = await result.json();
+            const error = response.message?.error;
+            if(error){
+                console.error(error);
+                return;
+            }
+            const data: Project[] = response;
             if(data.length > 0) {
                 this.projects.push(...data);
                 this.page++;
+                this.projectsCount.target = this.projects.length;
             }else {
                 this.downloadProjects = false;
             }

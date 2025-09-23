@@ -24,8 +24,8 @@
         }
     }
     // compare api pojects last activity with database last activitys
-    const apiArcs = projectStore.projects
-    const dbArcs = await db.instance.getArcs();
+    // const apiArcs = projectStore.projects
+    //const dbArcs = await db.instance.getArcs();
 
     
 

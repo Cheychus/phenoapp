@@ -48,12 +48,7 @@
       <input type="search" class="grow" placeholder="Search Arcs" />
     </label>
 
-    {#if projectStore.downloadProjects}
-      <Loader />
-    {:else}
-      <p>{projectStore.projects.length} Arcs found</p>
-    {/if}
-
+    <p>{Math.round(projectStore.projectsCount.current)} Arcs found</p>
     
   </div>
   <div class="w-2/3 flex flex-col gap-2">
