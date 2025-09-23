@@ -1,6 +1,8 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
     import { page } from "$app/state";
+  import { db } from "$lib/store/Database.svelte";
+  import { projectStore } from "$lib/store/ProjectsStore.svelte";
     import { userSettings } from "$lib/store/UserSettings.svelte";
 
     function changeSelectedArc(){
@@ -21,6 +23,11 @@
             goto("/explorer/overview");
         }
     }
+    // compare api pojects last activity with database last activitys
+    const apiArcs = projectStore.projects
+    const dbArcs = await db.instance.getArcs();
+
+    
 
 </script>
 
@@ -36,11 +43,15 @@
         {/each}
     </select>
 
+    
+
     {#if !page.url.pathname.startsWith("/explorer")}
         <button
-            class="btn btn-accent"
+            class="btn btn-accent px-8"
             onclick={() => goto("/explorer/overview")}
             >Explore Arc
         </button>
     {/if}
+
+    <button class="btn btn-secondary" disabled>Update Arcs (0)</button>
 </div>

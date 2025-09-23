@@ -1,6 +1,6 @@
 import type { Project } from "$lib/types/types";
 import type { PageLoad } from "./$types";
-import { projectStore } from "$lib/store/ProjectsStore.svelte";
+import { this } from "$lib/store/ProjectsStore.svelte";
 
 export const load: PageLoad = async ({ fetch, params }) => {
 
