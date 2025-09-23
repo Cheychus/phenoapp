@@ -43,10 +43,12 @@ class ProjectStore {
       console.log("SSR init() projectStore --> return");
       return;
     }
-    console.log("projectStore --> init()");
+    console.log("[INFO]: Initialise ProjectStore...");
+    await this.checkForUpdates();
+    console.log(`[INFO]: ProjectStore was initialised!`);
+  }
 
-    const dbArcs = await Database.getInstance().then((db) => db.getArcs());
-
+  public async fetchAllProjects() {
     // Download all projects from api
     while (this.downloadProjects) {
       const apiUrl = `${this.projectUrl}?per_page=${this.perPage}&page=${this.page}`;
@@ -61,20 +63,6 @@ class ProjectStore {
       if (data.length > 0) {
         data.forEach((project) => {
           this.projects.set(project.id, project);
-
-          // check here if project is newer than db version if arc is in db
-          const dbArc = dbArcs.find((dbArc) => dbArc.id === project.id);
-          if (dbArc) {
-            const apiDate = new Date(project.last_activity_at);
-            const dbDate = new Date(dbArc.lastActivity);
-            console.log("apiDate: ", apiDate, "dbDate: ", dbDate);
-            if (apiDate.getTime() !== dbDate.getTime()) {
-              console.log("Update needed on ARC: ", dbArc.name);
-              this.upgradeProjects.push(Number(dbArc.id));
-            } else {
-              console.log("dbArc: ", dbArc.name, " is up to date");
-            }
-          }
         });
         this.page++;
         this.projectsCount.target = this.projects.size;
@@ -84,17 +72,53 @@ class ProjectStore {
     }
   }
 
-  public async downloadProject(id: number): Promise<ArcDatabaseObject | null> {
-    // get project data from projects
-    const apiUrl = `https://git.nfdi4plants.org/api/v4/projects/${id}/packages/generic/isa_arc_json/0.0.1/arc-ro-crate-metadata.json`;
-    const project: Project | undefined = this.projects.get(id);
-    if (!project) {
-      console.log(
-        `Cant download Project with id: ${id} (not found in projects)`
-      );
+  async fetchSingleProject(id: number) {
+    const apiUrl = `${this.projectUrl}${id}`;
+    const result = await fetch(`/?target=${encodeURIComponent(apiUrl)}`);
+    const response = await result.json();
+    const error = response.message?.error;
+    if (error) {
+      console.error(error);
       return null;
     }
-    const res = await fetch(`/?target=${encodeURIComponent(apiUrl)}`);
+    const data: Project = response;
+    return data;
+  }
+
+  private async checkForUpdates() {
+    // get db arcs
+    const db = await Database.getInstance();
+    const dbArcs = await db.getArcs();
+
+    dbArcs.forEach(async (dbArc) => {
+      // get newest project version from api with id from db
+      const apiArc = await this.fetchSingleProject(dbArc.id);
+      if (apiArc) {
+        const apiDate = new Date(apiArc.last_activity_at);
+        const dbDate = new Date(dbArc.lastActivity);
+        if (apiDate.getTime() !== dbDate.getTime()) {
+          console.log("Update needed on ARC: ", dbArc.name);
+          console.log("apiDate: ", apiDate, "\n dbDate: ", dbDate);
+          this.upgradeProjects.push(Number(dbArc.id));
+        }
+      } else {
+        console.warn("[WARNING]: Could not update ARC with id: ", dbArc.id);
+      }
+    });
+  }
+
+  public async downloadProject(id: number): Promise<ArcDatabaseObject | null> {
+    // get project data from projects
+    const arcRoCrateURL = `https://git.nfdi4plants.org/api/v4/projects/${id}/packages/generic/isa_arc_json/0.0.1/arc-ro-crate-metadata.json`;
+    const project: Project | null =
+      this.projects.get(id) ?? (await this.fetchSingleProject(id));
+
+    if (!project) {
+      console.log(`Could not download project with id ${id}!`);
+      return null;
+    }
+
+    const res = await fetch(`/?target=${encodeURIComponent(arcRoCrateURL)}`);
     if (!res.ok) {
       console.error("Download failed", res.status);
       return null;

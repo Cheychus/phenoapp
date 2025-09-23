@@ -2,7 +2,6 @@
   import { arcData } from "$lib/store/ArcData.svelte";
   import { onMount } from "svelte";
   import DataFrame from "dataframe-js";
-  import { resourceStore } from "$lib/store/ResourceStore.svelte";
   import Pagination from "$lib/components/Pagination.svelte";
 
 
@@ -14,8 +13,8 @@
   let { resource } = $props();
 
   onMount(async () => {
-    console.log("init --> csv Viewer");
-    let csv = await resourceStore.fetchData(resource);
+    console.log("[INFO]: Initialise CSV Viewer...");
+    let csv = await arcData.resourceStore.fetchData(resource);
     let df;
     if (resource.type === "csv") {
       df = await DataFrame.fromCSV(new File([csv], "file.csv"));
@@ -33,7 +32,7 @@
     // console.log(Object.keys(dict));
     // console.log(df.toArray());
     // console.log(df.toCollection());
-
+    console.log("[INFO]: CSV Viewer was initialised!");
   });
 
   let smallTable = $state(false);

@@ -6,10 +6,6 @@
 	import { userSettings } from "$lib/store/UserSettings.svelte.js";
 	import { Database } from "$lib/store/Database.svelte";
 	import { onMount } from "svelte";
-  import { resourceStore, ResourceStore } from "$lib/store/ResourceStore.svelte";
-    import { errorStore } from "$lib/store/ErrorStore.svelte";
-  import { arcData } from "$lib/store/ArcData.svelte";
-	
 
 	let { children } = $props();
 
@@ -18,8 +14,6 @@
 		let arcs = await db.getArcs();
 		userSettings.arcs = arcs;
 		userSettings.init();
-		resourceStore.init(Number(userSettings.selectedArcId));
-
 	});
 
 </script>
@@ -31,11 +25,6 @@
 <div data-theme={userSettings.theme} class="font-oswald flex flex-col h-screen">
 	<Header />
 	<main class="flex-1 justify-center overflow-auto">
-		<!-- <div>
-			{#each errorStore.errors as error}
-				<div class="alert alert-error">{error}</div>
-			{/each}
-		</div> -->
 		<div class="toast toast-end"></div>
 
 		<section class="mx-layout">

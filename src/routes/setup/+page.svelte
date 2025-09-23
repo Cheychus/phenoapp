@@ -9,7 +9,7 @@
 
   onMount(async () => {
     // get all projects from api
-    // await projectStore.init();
+    projectStore.fetchAllProjects();
   });
 </script>
 

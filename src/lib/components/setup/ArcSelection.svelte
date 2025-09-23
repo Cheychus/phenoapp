@@ -26,8 +26,6 @@
     }
   }
 
-  $inspect(projectStore.upgradeProjects);
-
   async function updateArcs(){
     const db = await Database.getInstance();
     

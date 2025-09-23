@@ -21,10 +21,11 @@ export class Database {
     }
 
     if(!this.instance){
-        console.log("create db instance...");
+        console.log("[INFO]: Create Database instance...");
         this.instance = (async () => {
             const db = new Database();
             db.db = await db.openDB();
+            console.log("[INFO]: Database was created!");
             return db;
         })();
     }

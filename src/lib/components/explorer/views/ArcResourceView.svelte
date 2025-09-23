@@ -1,12 +1,11 @@
 <script lang="ts">
-    import { resourceStore } from "$lib/store/ResourceStore.svelte";
-
     import type { ArcResource } from "$lib/types/types";
     import { onMount } from "svelte";
     import MarkdownView from "./MarkdownView.svelte";
     import PictureView from "./PictureView.svelte";
     import { page } from "$app/state";
     import CharacteristicsView from "./CharacteristicsView.svelte";
+  import { arcData } from "$lib/store/ArcData.svelte";
 
     let { process } = $props();
 
@@ -21,7 +20,7 @@
         if (!process.name) {
             name = "undefined";
         } else {
-            resource = resourceStore.addResource(process.name);
+            resource = arcData.resourceStore.addResource(process.name);
         }
     });
 </script>

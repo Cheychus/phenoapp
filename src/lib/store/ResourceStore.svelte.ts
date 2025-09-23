@@ -1,6 +1,5 @@
 import { PathResolver } from "$lib/services/PathResolver";
 import type { ArcResource, ArcResourceType } from "$lib/types/types";
-import type { ArcDatabaseObject } from "./Database.svelte";
 
 export class ResourceStore {
   baseUrl: string = "";
@@ -9,11 +8,12 @@ export class ResourceStore {
   data = $state(new Map<string, any>());
   inflightMap = new Map<string, Promise<any>>();
 
-  //   constructor(arcId: number) {
-  //     console.log("init --> Resource Store");
-  //     this.baseUrl = `https://git.nfdi4plants.org/api/v4/projects/${arcId}/repository/files`;
-  //     this.resolver = new PathResolver(this.baseUrl);
-  //   }
+    constructor(arcId: number) {
+      console.log("[INFO]: Initialise ResourceStore...");
+      this.baseUrl = `https://git.nfdi4plants.org/api/v4/projects/${arcId}/repository/files`;
+      this.resolver = new PathResolver(this.baseUrl);
+      console.log("[INFO]: ResourceStore was initialised with ARC-ID: ", arcId);
+    }
 
   init(arcId: number) {
     console.log("init --> Resource Store");
@@ -51,7 +51,7 @@ export class ResourceStore {
     // Is data already downloaded?
     let existingData = this.isResourceDataExisting(resource);
     if (existingData) {
-      console.log("data already in store: ", existingData);
+      // console.log("data already in store: ", existingData);
       return existingData;
     }
 
@@ -98,7 +98,7 @@ export class ResourceStore {
     return fetchPromise;
   }
 
-  getApiExtensions(type: ArcResourceType) {
+  static getApiExtensions(type: ArcResourceType) {
     switch (type) {
       case "image":
       case "csv":
@@ -113,5 +113,3 @@ export class ResourceStore {
     }
   }
 }
-
-export const resourceStore = new ResourceStore();

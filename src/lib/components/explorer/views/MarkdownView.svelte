@@ -1,6 +1,5 @@
 <script lang="ts">
-  import { projectStore } from "$lib/store/ProjectsStore.svelte";
-  import { resourceStore } from "$lib/store/ResourceStore.svelte";
+  import { arcData } from "$lib/store/ArcData.svelte";
   import { marked } from "marked";
   import { onMount } from "svelte";
 
@@ -11,7 +10,7 @@
   // console.log(url);
  
   onMount(async () => {
-      markdown = await resourceStore.fetchData(resource);
+      markdown = await arcData.resourceStore.fetchData(resource);
 
       if(!markdown){
         markdown = "Could not fetch markdown file";

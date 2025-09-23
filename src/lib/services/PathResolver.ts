@@ -1,4 +1,5 @@
-import { resourceStore } from "$lib/store/ResourceStore.svelte";
+// import { resourceStore } from "$lib/store/ResourceStore.svelte";
+import { ResourceStore } from "$lib/store/ResourceStore.svelte";
 import type { ArcResource, ArcResourceType } from "$lib/types/types";
 
 export class PathResolver {
@@ -63,7 +64,7 @@ export class PathResolver {
       name: this.getName(path),
       rawPath: path,
       normalizedPath: this.normalize(path),
-      url: this.toUrl(path) + resourceStore.getApiExtensions(type),
+      url: this.toUrl(path) + ResourceStore.getApiExtensions(type),
     };
   }
 }

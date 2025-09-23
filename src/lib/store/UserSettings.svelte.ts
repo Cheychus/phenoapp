@@ -2,10 +2,8 @@ import { browser } from '$app/environment';
 import type { ArcDatabaseObject } from './Database.svelte';
 import { Database } from './Database.svelte';
 import { arcData, resetArcData } from './ArcData.svelte';
-import { resourceStore } from './ResourceStore.svelte';
 
 class UserSettings {
-
     theme = $state("");
     arcs: ArcDatabaseObject[] = $state<ArcDatabaseObject[]>([]);
     selectedArc = $state<ArcDatabaseObject>();
@@ -20,8 +18,8 @@ class UserSettings {
 
     // init user setting if browser is loaded
     init() {
-        console.log("init() --> userSettings");
         if (browser) {
+            console.log("[INFO]: Initialise UserSettings...");
             const theme = localStorage.getItem("theme");
             if (theme) {
                 this.theme = theme;
@@ -29,11 +27,10 @@ class UserSettings {
 
             const selectedArcId = localStorage.getItem('selectedArcId');
             if (selectedArcId) {
-    
                 this.selectedArcId = selectedArcId;
                 this.selectArc();
             }
-
+            console.log("[INFO]: UserSettings was initialised!");
         }
     }
 
@@ -70,14 +67,13 @@ class UserSettings {
     }
 
     selectArc() {
-        console.log("select Arc ID: ", this.selectedArcId);
+        console.log(`[INFO]: ARC with id: ${this.selectedArcId} was selected`);
         localStorage.setItem('selectedArcId', this.selectedArcId);
 
         const arc = this.arcs.find((el) => el.id === Number(this.selectedArcId));
         if (arc) {
             this.selectedArc = arc;
             arcData.init(arc);
-            resourceStore.init(Number(arc.id)); 
         } else {
             console.error(`No arc with id: ${this.selectedArcId} found!`);
         }

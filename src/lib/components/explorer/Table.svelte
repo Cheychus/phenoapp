@@ -2,7 +2,6 @@
   import { page } from "$app/state";
   import { arcData } from "$lib/store/ArcData.svelte";
   import { errorStore } from "$lib/store/ErrorStore.svelte";
-  import { resourceStore } from "$lib/store/ResourceStore.svelte";
   import type { ArcResource, ArcResourceType } from "$lib/types/types";
   import { toArray } from "$lib/utils/helpers";
   import { getResourceType } from "$lib/utils/typeHandler";
@@ -38,7 +37,7 @@
         }
 
         const path = arcObject?.name ?? "unknown";
-        const res = resourceStore.addResource(path);
+        const res = arcData.resourceStore.addResource(path);
         dataFiles.push(res);
       }
 

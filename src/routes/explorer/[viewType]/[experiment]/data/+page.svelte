@@ -1,7 +1,6 @@
 <script lang="ts">
   import { page } from "$app/state";
   import { arcData } from "$lib/store/ArcData.svelte";
-  import { resourceStore } from "$lib/store/ResourceStore.svelte";
 
   console.log(page.params);
   const experiment = page.params.experiment;

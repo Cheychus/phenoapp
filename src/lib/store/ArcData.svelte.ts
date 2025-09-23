@@ -1,16 +1,19 @@
 import type { ArcDatabaseObject } from "./Database.svelte";
 import type { ArcResource, ArcResourceType, Assay, Organization, Person } from "$lib/types/types";
 import { toArray } from "$lib/utils/helpers";
-import { resourceStore } from "./ResourceStore.svelte";
+// import { resourceStore } from "./ResourceStore.svelte";
 import { getResourceType } from "$lib/utils/typeHandler";
 import { errorStore } from "./ErrorStore.svelte";
 import { SvelteMap } from "svelte/reactivity";
+import { ResourceStore } from "./ResourceStore.svelte";
 
 class ArcData {
   arc = $state<ArcDatabaseObject>();
   context = [];
   graph = $state([]);
   graphMap = new Map<string, any>();
+
+  resourceStore!: ResourceStore;
 
   studyData = $state([]);
   studyProcesses = $state(new SvelteMap<string, any[]>());
@@ -31,17 +34,17 @@ class ArcData {
 
 
   init(arc: ArcDatabaseObject) {
-    console.log("init arc -->", arc.id);
-    resourceStore.init(Number(arc.id));
+    console.log(`[INFO]: Initialise ARC with id ${arc.id}...`);
     this.arc = arc;
     this.graph = arc.content["@graph"];
+
+    this.resourceStore = new ResourceStore(arc.id);
 
     if(!this.graph){
       console.error('no graph');
       return;
     }
 
-    console.log('init graph Map...');
     this.graph?.forEach(node => {
       const key = node["@id"];
       const value = node;
@@ -98,6 +101,7 @@ class ArcData {
       this.assayDatafiles.set(assay.identifier, this.extractDataFiles(assay.hasPart));
     }
 
+    console.log(`[INFO]: ARC with id ${arc.id}... was initialised`);
     
   }
 
@@ -111,7 +115,7 @@ class ArcData {
         if (!path) {
           continue;
         }
-        const res = resourceStore.addResource(path);
+        const res = this.resourceStore.addResource(path);
         // console.log(res, " res");
         datafiles.push(res);
       }
