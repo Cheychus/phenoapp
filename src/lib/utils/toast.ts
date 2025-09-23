@@ -1,4 +1,6 @@
-export function showToast(type: string, message: string) {
+export type ToastType = "error" | "success" | "info";
+
+export function showToast(type: ToastType, message: string) {
     const toastContainer = document.querySelector(".toast");
 
     const div = document.createElement("div");

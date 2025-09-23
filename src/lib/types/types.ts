@@ -5,7 +5,7 @@ export interface Project {
   forks_count: number;
   http_url_to_repo: string;
   id: number;
-  last_activity_at: string;
+  last_activity_at: Date;
   name: string;
   url: string;
   created_at: Date;

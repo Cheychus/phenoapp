@@ -4,7 +4,7 @@
 	import Header from "$lib/components/Header.svelte";
 	import Breadcrump from "$lib/components/Breadcrump.svelte";
 	import { userSettings } from "$lib/store/UserSettings.svelte.js";
-	import { db } from "$lib/store/Database.svelte";
+	import { Database } from "$lib/store/Database.svelte";
 	import { onMount } from "svelte";
   import { resourceStore, ResourceStore } from "$lib/store/ResourceStore.svelte";
     import { errorStore } from "$lib/store/ErrorStore.svelte";
@@ -14,8 +14,8 @@
 	let { children } = $props();
 
 	onMount(async () => {
-		await db.init();
-		let arcs = await db.instance.getArcs();
+		const db = await Database.getInstance();
+		let arcs = await db.getArcs();
 		userSettings.arcs = arcs;
 		userSettings.init();
 		resourceStore.init(Number(userSettings.selectedArcId));

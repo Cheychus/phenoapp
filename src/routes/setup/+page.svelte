@@ -53,7 +53,7 @@
   </div>
   <div class="w-2/3 flex flex-col gap-2">
     <div class="flex flex-col gap-2">
-      {#if projectStore.projects.length <= 0}
+      {#if projectStore.projects.size <= 0}
         <Loader loadType="skeleton" />
         <Loader loadType="skeleton" />
         <Loader loadType="skeleton" />
@@ -62,7 +62,7 @@
       {/if}
     </div>
 
-    {#each projectStore.projects as project}
+    {#each projectStore.projects.values() as project}
       <DownloadArc {...project} baseUrl="http://git.nfdi4plants.org" />
     {/each}
   </div>

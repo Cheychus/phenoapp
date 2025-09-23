@@ -1,14 +1,14 @@
 import { browser } from '$app/environment';
-import type { Arc } from './Database.svelte';
-import { db } from './Database.svelte';
+import type { ArcDatabaseObject } from './Database.svelte';
+import { Database } from './Database.svelte';
 import { arcData, resetArcData } from './ArcData.svelte';
 import { resourceStore } from './ResourceStore.svelte';
 
 class UserSettings {
 
     theme = $state("");
-    arcs: Arc[] = $state<Arc[]>([]);
-    selectedArc = $state<Arc>();
+    arcs: ArcDatabaseObject[] = $state<ArcDatabaseObject[]>([]);
+    selectedArc = $state<ArcDatabaseObject>();
     selectedArcId = $state("");
 
     options = $state({
@@ -41,20 +41,20 @@ class UserSettings {
         localStorage.setItem("theme", this.theme);
     }
 
-    isArcExisting(id: string): boolean {
+    isArcExisting(id: number): boolean {
         return this.arcs.some(el => el.id === id);
     }
 
-    async addArc(arc: Arc) {
-        await db.instance.addArc(arc);
-        this.arcs = await db.instance.getArcs();
+    async addArc(arc: ArcDatabaseObject) {
+        await Database.getInstance().then(db => db.addArc(arc));
+        this.arcs = await Database.getInstance().then(db => db.getArcs());
     }
 
     async removeArc(id: number) {
-        await db.instance.removeArc(id);
-        this.arcs = await db.instance.getArcs();
+        const db = await Database.getInstance();
+        await db.removeArc(id);
+        this.arcs = await db.getArcs();
 
-        console.log(this.selectedArcId, id);
         if(Number(this.selectedArcId) === id){
             // remove arc data from selection and reset arc state
             console.log('reset?')
@@ -65,7 +65,7 @@ class UserSettings {
 
     }
 
-    findArc(url: string): Arc | undefined {
+    findArc(url: string): ArcDatabaseObject | undefined {
         return this.arcs.find((arc) => arc.url === url);
     }
 

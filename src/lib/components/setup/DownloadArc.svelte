@@ -3,6 +3,8 @@
   import { showToast } from "$lib/utils/toast";
   import Loader from "$lib/components/Loader.svelte";
     import { arcData } from "$lib/store/ArcData.svelte";
+  import { Database } from "$lib/store/Database.svelte";
+  import { projectStore } from "$lib/store/ProjectsStore.svelte";
 
   let {
     baseUrl,
@@ -19,11 +21,10 @@
     star_count,
   } = $props();
 
-  const apiUrl = `https://git.nfdi4plants.org/api/v4/projects/${id}/packages/generic/isa_arc_json/0.0.1/arc-ro-crate-metadata.json`;
   let downloaded = $state(userSettings.isArcExisting(id));
   let loading = $state(false);
 
-  async function downloadFile(name: string, url: string) {
+  async function downloadFile() {
     if (loading) {
       console.log("already downloading...");
       return;
@@ -32,31 +33,20 @@
       showToast("error", "Arc is already downloaded!");
       return;
     }
+
     loading = true;
-    const res = await fetch(`/?target=${encodeURIComponent(url)}`);
-    if (!res.ok) {
-      console.error("Download failed", res.status);
+    const arcObj = await projectStore.downloadProject(id);
+    if(!arcObj){
       return;
     }
-
-    const json = await res.json();
-    console.log(json, "downloaded Arc");
-
-    const arcObject = {
-      name: name,
-      id: id,
-      url: url,
-      lastActivity: new Date(last_activity_at),
-      content: json,
-    };
-    await userSettings.addArc(arcObject);
+    await userSettings.addArc(arcObj);
     downloaded = true;
     loading = false;
     showToast("success", "Successfully downloaded Arc");
   }
 
   async function removeFile(id: string) {
-    await userSettings.removeArc(id);
+    await userSettings.removeArc(Number(id));
     if (id === userSettings.selectedArcId) {
       userSettings.selectedArcId = "";
     }
@@ -178,7 +168,7 @@
         <button
           type="button"
           class="btn relative flex items-center justify-center btn-accent px-12 min-w-42"
-          onclick={() => downloadFile(name, apiUrl)}
+          onclick={() => downloadFile()}
         >
           {#if loading}
             <div class="absolute left-4 flex items-center justify-center">

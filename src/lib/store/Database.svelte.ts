@@ -1,20 +1,34 @@
-export type Arc = {
+import { browser } from "$app/environment";
+
+export type ArcDatabaseObject = {
   name: string;
   url: string;
-  id: string | number;
+  id: number;
   lastActivity: Date;
   content: string;
 };
 
+
 export class Database {
   private db!: IDBDatabase;
+  private static instance: Promise<Database> | null = null;
 
   private constructor() {}
 
-  static async create(): Promise<Database> {
-    const instance = new Database();
-    instance.db = await instance.openDB();
-    return instance;
+  public static getInstance(): Promise<Database> {
+    if(!browser){
+        throw new Error("Database can only be used in browser");
+    }
+
+    if(!this.instance){
+        console.log("create db instance...");
+        this.instance = (async () => {
+            const db = new Database();
+            db.db = await db.openDB();
+            return db;
+        })();
+    }
+    return this.instance;
   }
 
   // DB öffnen/erstellen
@@ -54,7 +68,7 @@ export class Database {
     });
   }
 
-  async addArc(arc: Arc): Promise<boolean> {
+  async addArc(arc: ArcDatabaseObject): Promise<boolean> {
     return new Promise((resolve, reject) => {
       const transaction = this.db.transaction(["arcs"], "readwrite");
       const objectStore = transaction.objectStore("arcs");
@@ -77,7 +91,7 @@ export class Database {
     });
   }
 
-  async getArcs(): Promise<Arc[]> {
+  async getArcs(): Promise<ArcDatabaseObject[]> {
     return new Promise((resolve, reject) => {
       const request = this.db
         .transaction(["arcs"])
@@ -88,27 +102,17 @@ export class Database {
       request.onerror = () => reject(request.error);
     });
   }
+
+  public static createArcObject(id: number, name: string, url: string, lastActivity: Date, content: any): ArcDatabaseObject{
+    return {
+        id: id,
+        name: name,
+        url: url,
+        lastActivity: lastActivity,
+        content: content,
+    }
+  }
+
+
 }
 
-// export let dbInstance: Database = await Database.create();
-let dbInstance: Database | null = null;
-export const db = {
-  async init() {
-    if (typeof window === "undefined") {
-      throw new Error("indexedDB is not availiable in SSR");
-    }
-
-    if (!dbInstance) {
-      console.log("no db instance --> init database...");
-      dbInstance = await Database.create();
-    }
-  },
-
-  get instance(): Database {
-    if (!dbInstance) {
-      throw new Error("Database is not initialized. Call db.init() firtst");
-    }
-
-    return dbInstance;
-  },
-};

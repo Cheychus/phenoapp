@@ -1,6 +1,6 @@
 import { PathResolver } from "$lib/services/PathResolver";
 import type { ArcResource, ArcResourceType } from "$lib/types/types";
-import type { Arc } from "./Database.svelte";
+import type { ArcDatabaseObject } from "./Database.svelte";
 
 export class ResourceStore {
   baseUrl: string = "";

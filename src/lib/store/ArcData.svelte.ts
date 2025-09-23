@@ -1,4 +1,4 @@
-import type { Arc } from "./Database.svelte";
+import type { ArcDatabaseObject } from "./Database.svelte";
 import type { ArcResource, ArcResourceType, Assay, Organization, Person } from "$lib/types/types";
 import { toArray } from "$lib/utils/helpers";
 import { resourceStore } from "./ResourceStore.svelte";
@@ -7,7 +7,7 @@ import { errorStore } from "./ErrorStore.svelte";
 import { SvelteMap } from "svelte/reactivity";
 
 class ArcData {
-  arc = $state<Arc>();
+  arc = $state<ArcDatabaseObject>();
   context = [];
   graph = $state([]);
   graphMap = new Map<string, any>();
@@ -30,7 +30,7 @@ class ArcData {
   }
 
 
-  init(arc: Arc) {
+  init(arc: ArcDatabaseObject) {
     console.log("init arc -->", arc.id);
     resourceStore.init(Number(arc.id));
     this.arc = arc;
