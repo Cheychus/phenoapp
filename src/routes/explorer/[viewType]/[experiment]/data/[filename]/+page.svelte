@@ -1,11 +1,16 @@
 <script lang="ts">
   import CsvView from "$lib/components/explorer/views/CsvView.svelte";
   import { arcData } from "$lib/store/ArcData.svelte.js";
+  import { resourceStore } from "$lib/store/ResourceStore.svelte.js";
 
   let { data } = $props();
   let { filename } = data;
 
-  let resource = $derived.by(() => arcData.resourceStore.getResourceWithName(filename));
+
+  let resource = $derived(resourceStore.getResourceWithName(filename));
+
+  $inspect(resource);
+
 
 </script>
 

@@ -2,26 +2,36 @@ import { PathResolver } from "$lib/services/PathResolver";
 import type { ArcResource, ArcResourceType } from "$lib/types/types";
 
 export class ResourceStore {
-  baseUrl: string = "";
-  resolver: PathResolver;
+  private baseUrl: string = "";
+  private resolver: PathResolver | null = null;
   resources = $state<ArcResource[]>([]);
   data = $state(new Map<string, any>());
-  inflightMap = new Map<string, Promise<any>>();
+  private inflightMap = new Map<string, Promise<any>>();
 
-    constructor(arcId: number) {
-      console.log("[INFO]: Initialise ResourceStore...");
-      this.baseUrl = `https://git.nfdi4plants.org/api/v4/projects/${arcId}/repository/files`;
-      this.resolver = new PathResolver(this.baseUrl);
-      console.log("[INFO]: ResourceStore was initialised with ARC-ID: ", arcId);
-    }
+  constructor() {}
 
+  /**
+   * This method must be called after a arc is selected with the given id, because only then the resources for this arc can be created
+   * @param arcId
+   */
   init(arcId: number) {
-    console.log("init --> Resource Store");
+    console.log("[INFO]: Initialise ResourceStore...");
     this.baseUrl = `https://git.nfdi4plants.org/api/v4/projects/${arcId}/repository/files`;
     this.resolver = new PathResolver(this.baseUrl);
+    console.log("[INFO]: ResourceStore was initialised with ARC-ID: ", arcId);
   }
 
+  /**
+   * Add a resource to this store with the path from the arc.
+   * @param path can be something like /assays/experiment/file.csv
+   * @returns 
+   */
   addResource(path: string): ArcResource {
+    if(!this.resolver){
+      throw new Error("No Path resolver. Did you forget to call init() first?");
+    }
+
+    // try to find resource if it already exists or make new one
     let res = this.resources.find((res) => res.rawPath === path);
     if (!res) {
       res = this.resolver.makeResource(path);
@@ -43,6 +53,12 @@ export class ResourceStore {
     return this.resources.find((res) => res.name === name) || null;
   }
 
+  /**
+   * Try to fetch the data from a given resource. 
+   * This method is dependent on the right content type to parse the data in the right format.
+   * @param resource ArcResource 
+   * @returns any data, can be raw text for csv data or json...
+   */
   async fetchData(resource: ArcResource): Promise<any> {
     if (!resource.url) {
       console.log("no resource url");
@@ -51,13 +67,12 @@ export class ResourceStore {
     // Is data already downloaded?
     let existingData = this.isResourceDataExisting(resource);
     if (existingData) {
-      // console.log("data already in store: ", existingData);
       return existingData;
     }
 
+    // Only download files one time, if multiple asynchronous calls were made
     const inflight = this.inflightMap.get(resource.url);
     if (inflight) {
-      console.log("already fetching, watiting for the result...");
       return inflight;
     }
 
@@ -78,10 +93,9 @@ export class ResourceStore {
           data = await response.json();
         } else if (contentType.includes("text/plain")) {
           data = await response.text();
-        } else if (contentType.includes("binary")){
+        } else if (contentType.includes("binary")) {
           data = await response.text();
-        }
-        else {
+        } else {
           throw new Error(`unsupported Content Type: ${contentType}`);
         }
         this.data.set(resource.rawPath, data);
@@ -113,3 +127,6 @@ export class ResourceStore {
     }
   }
 }
+
+export let resourceStore = new ResourceStore();
+

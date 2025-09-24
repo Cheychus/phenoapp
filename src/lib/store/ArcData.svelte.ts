@@ -5,15 +5,13 @@ import { toArray } from "$lib/utils/helpers";
 import { getResourceType } from "$lib/utils/typeHandler";
 import { errorStore } from "./ErrorStore.svelte";
 import { SvelteMap } from "svelte/reactivity";
-import { ResourceStore } from "./ResourceStore.svelte";
+import { resourceStore, ResourceStore } from "./ResourceStore.svelte";
 
 class ArcData {
   arc = $state<ArcDatabaseObject>();
   context = [];
   graph = $state([]);
   graphMap = new Map<string, any>();
-
-  resourceStore!: ResourceStore;
 
   studyData = $state([]);
   studyProcesses = $state(new SvelteMap<string, any[]>());
@@ -28,7 +26,6 @@ class ArcData {
   persons: Person[] = $state([]);
 
   getObjectById(id: string) {
-    // return this.graph.find((node) => node["@id"] === id);
     return this.graphMap.get(id);
   }
 
@@ -38,7 +35,8 @@ class ArcData {
     this.arc = arc;
     this.graph = arc.content["@graph"];
 
-    this.resourceStore = new ResourceStore(arc.id);
+    // Init resource store here because now the arc ID is known
+    resourceStore.init(arc.id);
 
     if(!this.graph){
       console.error('no graph');
@@ -100,10 +98,9 @@ class ArcData {
       }
       this.assayDatafiles.set(assay.identifier, this.extractDataFiles(assay.hasPart));
     }
-
     console.log(`[INFO]: ARC with id ${arc.id}... was initialised`);
-    
   }
+
 
   extractDataFiles(hasPart: any): ArcResource[] {
     const datafiles = [];
@@ -115,7 +112,7 @@ class ArcData {
         if (!path) {
           continue;
         }
-        const res = this.resourceStore.addResource(path);
+        const res = resourceStore.addResource(path);
         // console.log(res, " res");
         datafiles.push(res);
       }

@@ -6,6 +6,7 @@
     import { page } from "$app/state";
     import CharacteristicsView from "./CharacteristicsView.svelte";
   import { arcData } from "$lib/store/ArcData.svelte";
+  import { resourceStore } from "$lib/store/ResourceStore.svelte";
 
     let { process } = $props();
 
@@ -20,7 +21,7 @@
         if (!process.name) {
             name = "undefined";
         } else {
-            resource = arcData.resourceStore.addResource(process.name);
+            resource = resourceStore.addResource(process.name);
         }
     });
 </script>

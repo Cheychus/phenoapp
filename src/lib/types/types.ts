@@ -48,7 +48,7 @@ export interface ArcResource {
   name: string;
   rawPath: string;
   normalizedPath: string;
-  url?: string;
+  url: string;
 }
 
 export interface Comment {
