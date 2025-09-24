@@ -127,7 +127,7 @@ export class ResourceStore {
         return "/raw";
       case "other":
       default:
-        return "";
+        return "/raw?lfs=true";
     }
   }
 }

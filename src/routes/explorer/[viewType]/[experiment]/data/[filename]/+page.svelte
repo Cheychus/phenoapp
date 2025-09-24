@@ -1,6 +1,6 @@
 <script lang="ts">
   import CsvView from "$lib/components/explorer/views/CsvView.svelte";
-  import { arcData } from "$lib/store/ArcData.svelte.js";
+  import TextView from "$lib/components/explorer/views/TextView.svelte";
   import { resourceStore } from "$lib/store/ResourceStore.svelte.js";
 
   let { data } = $props();
@@ -10,7 +10,6 @@
   let resource = $derived(resourceStore.getResourceWithName(filename));
 
   $inspect(resource);
-
 
 </script>
 
@@ -23,6 +22,8 @@
         <div class="mx-layout">
           <img src={resource.url} alt="" />
         </div>
+      {:else if resource.type === "txt"}
+        <TextView {resource} />
       {:else}
         file type is not supported
       {/if}

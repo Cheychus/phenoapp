@@ -65,7 +65,7 @@ export interface Graph {
 }
 
 
-export type ArcResourceType = "image" | "markdown" | "csv" | "tsv" | "other";
+export type ArcResourceType = "image" | "markdown" | "csv" | "tsv" | "txt" | "other";
 
 export interface ArcResource {
   type: ArcResourceType;

@@ -42,6 +42,8 @@ export class PathResolver {
         return "csv";
         case "tsv":
         return "tsv";
+      case "txt":
+        return "txt";
     }
 
     if (!extension) {
