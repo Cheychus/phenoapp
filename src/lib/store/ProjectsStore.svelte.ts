@@ -3,8 +3,6 @@ import type { Project } from "$lib/types/types";
 import { Tween } from "svelte/motion";
 import { cubicOut } from "svelte/easing";
 import { Database, type ArcDatabaseObject } from "./Database.svelte";
-import { userSettings } from "./UserSettings.svelte";
-import { showToast } from "$lib/utils/toast";
 import { SvelteMap } from "svelte/reactivity";
 
 class ProjectStore {
@@ -18,7 +16,6 @@ class ProjectStore {
     easing: cubicOut,
   });
   public upgradeProjects = $state<number[]>([]);
-  // $derived(this.projects.length);
   private downloadProjects = $state<boolean>(true);
 
   private constructor() {}
@@ -48,7 +45,11 @@ class ProjectStore {
     console.log(`[INFO]: ProjectStore was initialised!`);
   }
 
-  public async fetchAllProjects() {
+  /**
+   * Fetch all projects available on projects api with a specified amount of projects per call
+   * @returns 
+   */
+  public async fetchAllProjects(): Promise<void>{
     // Download all projects from api
     while (this.downloadProjects) {
       const apiUrl = `${this.projectUrl}?per_page=${this.perPage}&page=${this.page}`;
@@ -72,6 +73,11 @@ class ProjectStore {
     }
   }
 
+  /**
+   * Fetch only one project from projects api. Useful for showing/getting project information from a specific id
+   * @param id project ID
+   * @returns 
+   */
   async fetchSingleProject(id: number) {
     const apiUrl = `${this.projectUrl}${id}`;
     const result = await fetch(`/?target=${encodeURIComponent(apiUrl)}`);
@@ -85,6 +91,9 @@ class ProjectStore {
     return data;
   }
 
+  /**
+   * Get all saved arcs from the database and check if a newer version is available with projects api. 
+   */
   private async checkForUpdates() {
     // get db arcs
     const db = await Database.getInstance();
@@ -107,6 +116,12 @@ class ProjectStore {
     });
   }
 
+  /**
+   * Download the arc-ro-crate metadata json file for a specific project. 
+   * The data is stored in a ArcDatabaseObject and can be directly saved in the database. 
+   * @param id 
+   * @returns 
+   */
   public async downloadProject(id: number): Promise<ArcDatabaseObject | null> {
     // get project data from projects
     const arcRoCrateURL = `https://git.nfdi4plants.org/api/v4/projects/${id}/packages/generic/isa_arc_json/0.0.1/arc-ro-crate-metadata.json`;
@@ -127,7 +142,7 @@ class ProjectStore {
     const json = await res.json();
     console.log(json, "downloaded Arc");
 
-    const arcObj = Database.createArcObject(
+    const arcObj = Database.createArcDatabaseObject(
       id,
       project.name,
       project.url,

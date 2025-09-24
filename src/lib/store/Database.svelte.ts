@@ -104,7 +104,7 @@ export class Database {
     });
   }
 
-  public static createArcObject(id: number, name: string, url: string, lastActivity: Date, content: any): ArcDatabaseObject{
+  public static createArcDatabaseObject(id: number, name: string, url: string, lastActivity: Date, content: any): ArcDatabaseObject{
     return {
         id: id,
         name: name,

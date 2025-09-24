@@ -112,6 +112,11 @@ export class ResourceStore {
     return fetchPromise;
   }
 
+  /**
+   * Use this method to add specific url parameters when trying to fetch a resource.
+   * @param type 
+   * @returns 
+   */
   static getApiExtensions(type: ArcResourceType) {
     switch (type) {
       case "image":
