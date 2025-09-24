@@ -14,32 +14,56 @@ export interface Project {
   star_count: number;
 }
 
-export interface Person {
-  givenName: string;
-  familyName: string;
-  additionalName: string;
-  email: string;
-  address: string;
+export interface Person extends GraphNode {
+  givenName?: string;
+  familyName?: string;
+  additionalName?: string;
+  email?: string;
+  address?: string;
 }
 
 export interface Organization {
-  name: string;
+  name?: string;
 }
 
-export interface Assay {
-  identifier: string;
-  about?: Array<any>;
-  hasPart?: Array<any>;
+export interface Experiment extends GraphNode{
+  identifier?: string;
+  about?: Array<GraphNode>;
+  hasPart?: Array<GraphNode>;
   variableMeasured?: Array<any>;
 }
+
+export interface Investigation extends GraphNode{
+  citation?: any | GraphNode;
+  comment?: any;
+  creator?: any;
+  license?: any;
+  name?: any;
+}
+
+
+
+export interface Arc {
+  "@context": any[];
+  "@graph": GraphNode[];
+}
+
+export interface GraphNode {
+  "@id"?: any;
+  "@type"?: any;
+  identifier?: string;
+  name?: string;
+  additionalType?: any;
+  additionalProperty?: any[];
+  value?: string;
+}
+
+
 
 export interface Graph {
   identifier: number;
 }
 
-export interface GraphNode {
-  identifier: string;
-}
 
 export type ArcResourceType = "image" | "markdown" | "csv" | "tsv" | "other";
 

@@ -21,7 +21,7 @@
         description?: string;
     }
 
-    $inspect(investigation);
+    // $inspect(investigation);
 
     function fallback<T>(
         value: T | null | undefined,

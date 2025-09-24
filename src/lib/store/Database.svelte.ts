@@ -1,11 +1,12 @@
 import { browser } from "$app/environment";
+import type { Arc } from "$lib/types/types";
 
 export type ArcDatabaseObject = {
   name: string;
   url: string;
   id: number;
   lastActivity: Date;
-  content: string;
+  content: Arc;
 };
 
 

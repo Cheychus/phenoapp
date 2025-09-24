@@ -126,7 +126,6 @@ export class ResourceStore {
       case "markdown":
         return "/raw";
       case "other":
-        break;
       default:
         return "";
     }

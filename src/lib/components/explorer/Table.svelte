@@ -21,36 +21,6 @@
     return [];
   });
 
-  // $inspect(dataFiles);
-  // extractDataFiles();
-
-  function extractDataFiles(): ArcResource[] {
-    try {
-      const hasPart = toArray(tableData?.hasPart);
-      const dataFiles: ArcResource[] = [];
-
-      for (const df of hasPart) {
-        const arcObject = arcData.getObjectById(df["@id"]);
-
-        if (!arcObject) {
-          throw new Error(`Arc object not found for id ${df["@id"]}`);
-        }
-
-        const path = arcObject?.name ?? "unknown";
-        const res = arcData.resourceStore.addResource(path);
-        dataFiles.push(res);
-      }
-
-      return dataFiles;
-    } catch (error) {
-      console.error("extract Data Files failed: ", error);
-      errorStore.add(
-        "Could  not extract some data files. See console for details.",
-      );
-      return [];
-    }
-  }
-
   // Extract unique Keys from table Data
   let headers: Array<any> = $state([]);
 

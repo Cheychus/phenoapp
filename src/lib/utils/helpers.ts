@@ -1,4 +1,4 @@
-  export function toArray(input: any[]): any[] {
+  export function toArray(input: any[] | any): any[] {
     if (!input) {
       return [];
     }

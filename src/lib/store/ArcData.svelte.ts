@@ -1,26 +1,24 @@
 import type { ArcDatabaseObject } from "./Database.svelte";
-import type { ArcResource, ArcResourceType, Assay, Organization, Person } from "$lib/types/types";
+import { type Investigation, type ArcResource, type Experiment, type Graph, type GraphNode, type Organization, type Person } from "$lib/types/types";
 import { toArray } from "$lib/utils/helpers";
-// import { resourceStore } from "./ResourceStore.svelte";
-import { getResourceType } from "$lib/utils/typeHandler";
 import { errorStore } from "./ErrorStore.svelte";
 import { SvelteMap } from "svelte/reactivity";
-import { resourceStore, ResourceStore } from "./ResourceStore.svelte";
+import { resourceStore } from "./ResourceStore.svelte";
 
 class ArcData {
   arc = $state<ArcDatabaseObject>();
   context = [];
-  graph = $state([]);
+  graph = $state<GraphNode[]>([]);
   graphMap = new Map<string, any>();
 
-  studyData = $state([]);
+  studyData = $state<Experiment[]>([]);
   studyProcesses = $state(new SvelteMap<string, any[]>());
-  studyDatafiles = $state(new SvelteMap<string, any[]>);
+  studyDatafiles = $state(new SvelteMap<string, any[]>());
 
-  assayData: Assay[] = $state([]);
+  assayData = $state<Experiment[]>([]);
   assayProcesses = $state(new SvelteMap<string, any[]>());
   assayDatafiles = $state(new SvelteMap<string, any[]>());
-  investigationData = $state([]);
+  investigationData = $state<Investigation[]>([]);
 
   organizations: Organization[] = $state([]);
   persons: Person[] = $state([]);
@@ -28,7 +26,6 @@ class ArcData {
   getObjectById(id: string) {
     return this.graphMap.get(id);
   }
-
 
   init(arc: ArcDatabaseObject) {
     console.log(`[INFO]: Initialise ARC with id ${arc.id}...`);
@@ -38,12 +35,12 @@ class ArcData {
     // Init resource store here because now the arc ID is known
     resourceStore.init(arc.id);
 
-    if(!this.graph){
-      console.error('no graph');
+    if (!this.graph) {
+      console.error("no graph");
       return;
     }
 
-    this.graph?.forEach(node => {
+    this.graph?.forEach((node) => {
       const key = node["@id"];
       const value = node;
       this.graphMap.set(key, value);
@@ -63,50 +60,47 @@ class ArcData {
       return el["@type"] === "Dataset" && el["additionalType"] === "Investigation";
     });
 
-    // console.log(this.investigationData);
-
-
-
     this.organizations = this.graph.filter((el) => el["@type"] === "Organization");
     this.persons = this.graph.filter((el) => el["@type"] === "Person");
 
-    // Extract Data Files and process data
+    // Extract Data Files and process data from study
     for (const study of this.studyData) {
-
-      // Extract process Data 
-      let processData: any = this.graph.find((e: GraphNode) => e.identifier === study.identifier);
-      this.studyProcesses.set(study.identifier, processData);
-
-
-      if (!study.hasPart) {
-        console.log(`study ${study.identifier} has no datafiles`)
+      if (!study.identifier) {
+        console.warn(`study has no identifier!`);
         continue;
       }
-
+      if (!study.hasPart) {
+        console.warn(`study ${study.identifier} has no datafiles`);
+        continue;
+      }
+      let processData: any = this.graph.find((e: GraphNode) => e.identifier === study.identifier);
+      this.studyProcesses.set(study.identifier, processData);
       this.studyDatafiles.set(study.identifier, this.extractDataFiles(study.hasPart));
     }
 
+    // Extract Data Files and process data from assay
     for (const assay of this.assayData) {
-
-      // Extract process Data 
-      let processData: any = this.graph.find((e: GraphNode) => e.identifier === assay.identifier);
-      this.assayProcesses.set(assay.identifier, processData);
-
-      if (!assay.hasPart) {
-        console.log(`assay ${assay.identifier} has no datafiles`);
+      if (!assay.identifier) {
+        console.warn(`assay has no identifier!`);
         continue;
       }
+      if (!assay.hasPart) {
+        console.warn(`assay ${assay.identifier} has no datafiles`);
+        continue;
+      }
+      let processData: any = this.graph.find((e: GraphNode) => e.identifier === assay.identifier);
+      this.assayProcesses.set(assay.identifier, processData);
       this.assayDatafiles.set(assay.identifier, this.extractDataFiles(assay.hasPart));
     }
+
     console.log(`[INFO]: ARC with id ${arc.id}... was initialised`);
   }
 
-
-  extractDataFiles(hasPart: any): ArcResource[] {
+  extractDataFiles(hasPart: GraphNode[] | GraphNode): ArcResource[] {
     const datafiles = [];
     try {
-      hasPart = toArray(hasPart);
-      const fileObjects: any[] = hasPart.map((part) => this.getObjectById(part["@id"]) || null);
+      const parts = toArray(hasPart);
+      const fileObjects: any[] = parts.map((part) => this.getObjectById(part["@id"]) || null);
       for (const file of fileObjects) {
         const path = file.name; // Path to file is under .name
         if (!path) {
@@ -123,7 +117,6 @@ class ArcData {
       return [];
     }
   }
-
 }
 
 export let arcData = new ArcData();
