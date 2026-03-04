@@ -1,20 +1,25 @@
 import { browser } from '$app/environment';
-import type { Arc } from './Database.svelte';
-import { db } from './Database.svelte';
-import { arcData } from './ArcData.svelte';
+import type { ArcDatabaseObject } from './Database.svelte';
+import { Database } from './Database.svelte';
+import { arcData, resetArcData } from './ArcData.svelte';
 
 class UserSettings {
-
     theme = $state("");
-    arcs: Arc[] = $state<Arc[]>([]);
-    selectedArc = $state<Arc>();
+    arcs: ArcDatabaseObject[] = $state<ArcDatabaseObject[]>([]);
+    selectedArc = $state<ArcDatabaseObject>();
     selectedArcId = $state("");
+
+    options = $state({
+        autoDownloadImages: false,
+        anotherOption: true,
+    })
 
     constructor() { }
 
     // init user setting if browser is loaded
     init() {
         if (browser) {
+            console.log("[INFO]: Initialise UserSettings...");
             const theme = localStorage.getItem("theme");
             if (theme) {
                 this.theme = theme;
@@ -22,11 +27,10 @@ class UserSettings {
 
             const selectedArcId = localStorage.getItem('selectedArcId');
             if (selectedArcId) {
-    
                 this.selectedArcId = selectedArcId;
                 this.selectArc();
             }
-
+            console.log("[INFO]: UserSettings was initialised!");
         }
     }
 
@@ -34,26 +38,36 @@ class UserSettings {
         localStorage.setItem("theme", this.theme);
     }
 
-    isArcExisting(id: string): boolean {
+    isArcExisting(id: number): boolean {
         return this.arcs.some(el => el.id === id);
     }
 
-    async addArc(arc: Arc) {
-        await db.instance.addArc(arc);
-        this.arcs = await db.instance.getArcs();
+    async addArc(arc: ArcDatabaseObject) {
+        await Database.getInstance().then(db => db.addArc(arc));
+        this.arcs = await Database.getInstance().then(db => db.getArcs());
     }
 
-    async removeArc(id: string) {
-        await db.instance.removeArc(id);
-        this.arcs = await db.instance.getArcs();
+    async removeArc(id: number) {
+        const db = await Database.getInstance();
+        await db.removeArc(id);
+        this.arcs = await db.getArcs();
+
+        if(Number(this.selectedArcId) === id){
+            // remove arc data from selection and reset arc state
+            console.log('reset?')
+            this.selectedArcId = "";
+            localStorage.setItem("selectedArcId", "");
+            resetArcData();
+        }
+
     }
 
-    findArc(url: string): Arc | undefined {
+    findArc(url: string): ArcDatabaseObject | undefined {
         return this.arcs.find((arc) => arc.url === url);
     }
 
     selectArc() {
-        console.log("select Arc ID: ", this.selectedArcId);
+        console.log(`[INFO]: ARC with id: ${this.selectedArcId} was selected`);
         localStorage.setItem('selectedArcId', this.selectedArcId);
 
         const arc = this.arcs.find((el) => el.id === Number(this.selectedArcId));

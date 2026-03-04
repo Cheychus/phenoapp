@@ -4,22 +4,18 @@
 	import Header from "$lib/components/Header.svelte";
 	import Breadcrump from "$lib/components/Breadcrump.svelte";
 	import { userSettings } from "$lib/store/UserSettings.svelte.js";
-	import { db } from "$lib/store/Database.svelte";
+	import { Database } from "$lib/store/Database.svelte";
 	import { onMount } from "svelte";
-	import type { Arc } from "$lib/store/Database.svelte";
 
 	let { children } = $props();
-	let arcs = $state<Arc[]>([]);
 
 	onMount(async () => {
-		await db.init();
-		arcs = await db.instance.getArcs();
+		const db = await Database.getInstance();
+		let arcs = await db.getArcs();
 		userSettings.arcs = arcs;
-		const find = userSettings.arcs.find((el) => el.id === "2928");
-		console.log("find arc:", find);
-		            
 		userSettings.init();
 	});
+
 </script>
 
 <svelte:head>
@@ -28,7 +24,7 @@
 
 <div data-theme={userSettings.theme} class="font-oswald flex flex-col h-screen">
 	<Header />
-	<main class="flex-1 justify-center overflow-auto">
+	<main class="flex-1 justify-center overflow-auto max-h-screen">
 		<div class="toast toast-end"></div>
 
 		<section class="mx-layout">

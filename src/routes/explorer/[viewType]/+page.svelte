@@ -1,0 +1,31 @@
+<script lang="ts">
+    import { arcData } from "$lib/store/ArcData.svelte";
+    import { userSettings } from "$lib/store/UserSettings.svelte";
+    import Overview from "$lib/components/explorer/Overview.svelte";
+    import Experiments from "$lib/components/explorer/Experiments.svelte";
+  import type { PageProps } from "./$types";
+
+    let assays = $derived(arcData.assayData);
+    let studies = $derived(arcData.studyData);
+
+    let { data }: PageProps = $props();
+    let { viewType = "overview" } = $derived(data);
+
+    // $inspect(studies);
+</script>
+
+<section class="mx-layout flex flex-col gap-2">
+    {#if !userSettings.selectedArc}
+        <p>You need to select an Arc first!</p>
+    {:else if viewType === "assays"}
+        {#key assays}
+            <Experiments experiments={assays} {viewType} />
+        {/key}
+    {:else if viewType === "studies"}
+        {#key studies}
+            <Experiments experiments={studies} {viewType} />
+        {/key}
+    {:else}
+        <Overview />
+    {/if}
+</section>
